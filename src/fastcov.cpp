@@ -1,12 +1,11 @@
 #include "fastColMeans.h"
-// [[Rcpp::depends(RcppParallel)]]
-#include <RcppParallel.h>
+#include "TinyParallel.h"
 
 using namespace Rcpp;
-// using namespace RcppParallel;
+// using namespace TinyParallel;
 
 template <typename T1, typename T2>
-struct FastCov : public RcppParallel::Worker
+struct FastCov : public TinyParallel::Worker
 {
   const SEXP &x1;
   const SEXP &x2;
@@ -107,11 +106,17 @@ struct FastCov : public RcppParallel::Worker
     // }
 
     for(ii = (R_xlen_t)begin; ii < (R_xlen_t)end; ii++, colMeans2_ptr++){
-      col2Idx = (*col2_ptr) - 1;
-
       // Rcout << fake_col2 << "\n";
 
-      if(R_finite(col2Idx) && col2Idx >= 0 && col2Idx < ncol2) {
+      // gcc-UBSAN check error:
+      // runtime error: signed integer overflow: -2147483648 - 1 cannot be represented in type 'int'
+
+      // Cannot do this here! *col2_ptr might be NA_INTEGER, which is
+      // -2147483648, minus one will cause undefined behavior!!!
+      // col2Idx = (*col2_ptr) - 1;
+
+      if(R_finite(*col2_ptr) && *col2_ptr >= 1 && *col2_ptr <= ncol2) {
+        col2Idx = (*col2_ptr) - 1;
         colMeans1_ptr = REAL(colMeans1);
         if(!col1Null){
           col1_ptr = INTEGER(this->col1);
@@ -120,9 +125,10 @@ struct FastCov : public RcppParallel::Worker
         }
 
         for(jj = 0; jj < col1_len; jj++, colMeans1_ptr++){
-          col1Idx = (*col1_ptr) - 1;
 
-          if(R_finite(col1Idx) && col1Idx >= 0 && col1Idx < ncol1) {
+          if(R_finite(*col1_ptr) && *col1_ptr > 0 && *col1_ptr <= ncol1) {
+            col1Idx = (*col1_ptr) - 1;
+
             x1_ptr2 = (T1*)(x1_ptr + col1Idx * nObs);
             x2_ptr2 = (T2*)(x2_ptr + col2Idx * nObs);
             // Rcout << "-------\n";
@@ -270,7 +276,7 @@ SEXP fastcov_template(
 
 
   FastCov<T1, T2> fcov(x1, x2, col1_, col2_, colMeans1, colMeans2, ncol1, ncol2, nObs, df, re);
-  RcppParallel::parallelFor(0, col2_len, fcov);
+  TinyParallel::parallelFor(0, col2_len, fcov);
 
 
   // const T1* x1_ptr = get_sexp_pointer<T1>(x1);
@@ -505,10 +511,10 @@ SEXP fastcov(const SEXP &x1,
 }
 
 /*** R
-RcppParallel::setThreadOptions(numThreads = 1)
+ravetools_threads(n_threads = 2)
 a = matrix(1:10, nrow = 5)
 b = matrix(1:50, nrow = 5)
-y <- fastcov(a, b, col1 = c(2,1), NULL)
+y <- fast_cov(a, b, col_x = c(2,1), NULL)
 
 fastColMeans(a, c(2L,1L), NULL)
 
@@ -518,7 +524,7 @@ y - z
 fastcov(a, b, col1 = NULL, NULL)
 
 devtools::load_all()
-RcppParallel::setThreadOptions(numThreads = 8)
+RcppParallel::ravetools_threads(n_threads = 8)
 
 x <- matrix(rnorm(100000), nrow = 1000)
 y <- matrix(rnorm(100000), nrow = 1000)

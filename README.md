@@ -7,15 +7,16 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/dipterix/ravetools/workflows/R-CMD-check/badge.svg)](https://github.com/dipterix/ravetools/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ravetools)](https://CRAN.R-project.org/package=ravetools)
-[![R-CMD-check](https://github.com/dipterix/ravetools/workflows/R-CMD-check/badge.svg)](https://github.com/dipterix/ravetools/actions)
+[![r-universe](https://dipterix.r-universe.dev/badges/ravetools)](https://dipterix.r-universe.dev/)
 <!-- badges: end -->
 
 The goal of `ravetools` is to provide memory-efficient signal processing
 toolbox for `intracranial-EEG` analyses. Highlighted features include:
 
--   [`Notch filter`](#) (remove electric line noise)
+-   [`Notch filter`](#) (remove electrical line frequencies)
 -   [`Welch Periodogram`](#) (averaged power over frequencies)
 -   [`Wavelet`](#) (frequency-time decomposition)
 
@@ -39,7 +40,7 @@ This is a basic example which shows you how to preprocess an `iEEG`
 signal. The goal here is to:
 
 -   Plot diagnostic graphs to inspect channels
--   Apply Notch filters to remove electric line noise
+-   Apply Notch filters to remove electrical line noise
 -   Frequency-time decomposition and show the power densities
 
 <small>\* Channel referencing is not included</small>
@@ -60,7 +61,7 @@ signal <- sin( 120 * pi * time) +
 diagnose_channel(signal, srate = 2000)
 ```
 
-![](https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/toy-data-1.png?raw=true)
+<img src="https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/toy-data-1.png?raw=true" width="100%">
 
 ### 2. Apply `Notch` filters and inspect `Periodograms`
 
@@ -72,7 +73,7 @@ diagnose_channel(signal, signal2, srate = 2000,
                  name = c("Raw", "Filtered"))
 ```
 
-![](https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/notch-filter-1.png?raw=true)
+<img src="https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/notch-filter-1.png?raw=true" width="100%">
 
 ### 3. Frequency-time decomposition
 
@@ -109,7 +110,7 @@ image(
 )
 ```
 
-![](https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/wavelet-1.png?raw=true)
+<img src="https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/wavelet-1.png?raw=true" width="100%">
 
 #### `Multi-taper`
 
@@ -140,4 +141,28 @@ image(
 )
 ```
 
-![](https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/multitaper-1.png?raw=true)
+<img src="https://github.com/dipterix/ravetools/blob/master/adhoc/README-figures/multitaper-1.png?raw=true" width="100%">
+
+## References
+
+#### To cite ravetools in publications use, please cite the `RAVE` paper from `Beauchamp's lab`
+
+    Magnotti, JF, and Wang, Z, and Beauchamp, MS. RAVE: comprehensive
+      open-source software for reproducible analysis and visualization of
+      intracranial EEG data. NeuroImage, 223, p.117341.
+
+The `multitaper` function uses the script derived from `Prerau's lab`.
+The `TinyParallel` script is derived from `RcppParallel` package with
+`TBB` features removed (only use `tinythreads`).
+
+    [1] Magnotti, JF, and Wang, Z, and Beauchamp, MS. RAVE: comprehensive
+        open-source software for reproducible analysis and visualization of
+        intracranial EEG data. NeuroImage, 223, p.117341.
+    [2] Prerau, Michael J, and Brown, Ritchie E, and Bianchi, Matt T, and
+        Ellenbogen, Jeffrey M, and Purdon, Patrick L. Sleep Neurophysiological
+        Dynamics Through the Lens of Multitaper Spectral Analysis. Physiology,
+        December 7, 2016, 60-92.
+    [3] JJ Allaire, Romain Francois, Kevin Ushey, Gregory Vandenbrouck, Marcus
+        Geelnard and Intel (2022). RcppParallel: Parallel Programming Tools for
+        'Rcpp'. R package version 5.1.5.
+        https://CRAN.R-project.org/package=RcppParallel
