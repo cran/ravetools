@@ -1,8 +1,8 @@
-8643524d7f67248a4df535cd6b744743 *DESCRIPTION
+c153fa68165494010cce05f4a86378d9 *DESCRIPTION
 8162e5d84764ff9d4cd692716974b709 *NAMESPACE
-c197d91a718f7d34a89958052e7a945e *NEWS.md
+7a62a4a5893630d70ef06ac248a354a5 *NEWS.md
 46972cf971a4898b8d6209b0e505cee0 *R/RcppExports.R
-c6a9a6650c7f2bd72204c7dbee7eff11 *R/aaa.R
+9194a24eb451de41999e2f3eb256968a *R/aaa.R
 b00582d394699097afeda0835c46e801 *R/baseline.R
 580b39267d5435274deb7a1d50062508 *R/collapse.R
 88c3b83563fbe04ede511b4ac1589be3 *R/detrend.R
@@ -14,9 +14,9 @@ fa1a8beff1cea07e8eaa04c72c1a8760 *R/notch.R
 568e871744e8755d6c58cf50d3f10cad *R/pwelch-diagnosis.R
 4e7b65080e9f6cc2c804d713225db6e8 *R/pwelch.R
 afaa7ecb0f2edffe78d912986473b5d0 *R/shift_array.R
-0dda28a5301dab42f563effb37118699 *R/wavelet.R
+60dd8905a61bdf8addc5f4df8c7b88ab *R/wavelet.R
 a1c38b43fa74c881c1982ec72beb346c *R/window.R
-85b3e007daecbcee300ce21e21eafdc1 *README.md
+f37c62ef46714c7bf1a68c4a2d8886b1 *README.md
 6292f50cb0d756bd1d05d12904cbacbf *cleanup
 432bb56df8cb705c45dbd91f5b22a81e *configure
 6076a739edb21c2af0efb83d7e748559 *configure.ac
