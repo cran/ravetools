@@ -21,24 +21,60 @@ fastcov <- function(x1, x2, col1 = NULL, col2 = NULL, df = -1.0) {
     .Call(`_ravetools_fastcov`, x1, x2, col1, col2, df)
 }
 
-fftw_r2c <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL, inplace = FALSE) {
-    .Call(`_ravetools_fftw_r2c`, data, HermConj, fftwplanopt, ret, inplace)
+fftw_r2c <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_r2c`, data, HermConj, fftwplanopt, ret)
 }
 
-mvfftw_r2c <- function(data, fftwplanopt = 0L, ret = NULL, inplace = FALSE) {
-    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, ret, inplace)
+mvfftw_r2c <- function(data, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, ret)
 }
 
-fftw_c2c <- function(data, inverse = 0L, ret = NULL, inplace = FALSE) {
-    .Call(`_ravetools_fftw_c2c`, data, inverse, ret, inplace)
+fftw_c2c <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_c2c`, data, inverse, fftwplanopt, ret)
 }
 
-fftw_c2r <- function(data, HermConj = 1L, ret = NULL, inplace = FALSE) {
-    .Call(`_ravetools_fftw_c2r`, data, HermConj, ret, inplace)
+fftw_c2r <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_c2r`, data, HermConj, fftwplanopt, ret)
 }
 
 conjugate <- function(data) {
     .Call(`_ravetools_conjugate`, data)
+}
+
+rawToUInt8 <- function(x) {
+    .Call(`_ravetools_rawToUInt8`, x)
+}
+
+rawToInt8 <- function(x) {
+    .Call(`_ravetools_rawToInt8`, x)
+}
+
+rawToUInt16 <- function(x) {
+    .Call(`_ravetools_rawToUInt16`, x)
+}
+
+rawToInt16 <- function(x) {
+    .Call(`_ravetools_rawToInt16`, x)
+}
+
+rawToUInt32 <- function(x) {
+    .Call(`_ravetools_rawToUInt32`, x)
+}
+
+rawToInt32 <- function(x) {
+    .Call(`_ravetools_rawToInt32`, x)
+}
+
+rawToInt64 <- function(x) {
+    .Call(`_ravetools_rawToInt64`, x)
+}
+
+rawToFloat <- function(x) {
+    .Call(`_ravetools_rawToFloat`, x)
+}
+
+rawToString <- function(x) {
+    .Call(`_ravetools_rawToString`, x)
 }
 
 shiftArray <- function(x, alongIdx, unitIdx, shiftAmount) {
@@ -49,3 +85,7 @@ getDefaultNumThreads <- function() {
     .Call(`_ravetools_getDefaultNumThreads`)
 }
 
+# Register entry points for exported C++ functions
+methods::setLoadAction(function(ns) {
+    .Call('_ravetools_RcppExport_registerCCallable', PACKAGE = 'ravetools')
+})
