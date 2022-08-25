@@ -1,7 +1,7 @@
 Package: ravetools
 Type: Package
 Title: Signal Processing Toolbox for Analyzing 'Electrophysiology' Data
-Version: 0.0.5
+Version: 0.0.6
 Language: en-US
 Authors@R: c(
     person("Zhengjia", "Wang", email = "dipterix.wang@gmail.com", role = c("aut", "cre", "cph")),
@@ -32,7 +32,7 @@ Imports: graphics, stats, filearray (>= 0.1.3), Rcpp (>= 1.0.8),
 LinkingTo: Rcpp
 Suggests: fftwtools, bit64, pracma, microbenchmark, testthat
 NeedsCompilation: yes
-Packaged: 2022-08-06 15:23:31 UTC; dipterix
+Packaged: 2022-08-24 14:45:01 UTC; dipterix
 Author: Zhengjia Wang [aut, cre, cph],
   Beauchamp lab [cph],
   Karim Rahim [cph] (R package fftwtools),
@@ -41,4 +41,4 @@ Author: Zhengjia Wang [aut, cre, cph],
   Marcus Geelnard [cph] (TinyThread library)
 Maintainer: Zhengjia Wang <dipterix.wang@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-07 00:40:02 UTC
+Date/Publication: 2022-08-25 08:20:04 UTC

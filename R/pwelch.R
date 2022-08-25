@@ -12,7 +12,16 @@
 #' @param add logical, whether the plot should be added to existing canvas
 #' @param ... will be passed to \code{plot.pwelch} or ignored
 #' @param x \code{'pwelch'} instance returned by \code{pwelch} function
-#' @param col,xlim,ylim,main,type,cex,cex.main,cex.sub,cex.lab,cex.axis,las,xlab,ylab parameters passed to \code{\link[graphics]{plot.default}}
+#' @param col,xlim,ylim,main,type,cex,las,xlab,ylab,lty,lwd,xaxs,yaxs,mar,mgp,tck parameters passed to \code{\link[graphics]{plot.default}}
+#' @param se logical or a positive number indicating whether to plot standard
+#' error of mean; default is false. If provided with a number, then a multiple
+#' of standard error will be drawn. This option is only available when power
+#' is in log-scale (decibel unit)
+#' @param col.se,alpha.se controls the color and opacity of the standard error
+#' @param xticks ticks to show on frequency axis
+#' @param xline,yline controls how close the axis labels to the corresponding axes
+#' @param grid whether to draw rectangular grid lines to the plot; only
+#' respected when \code{add=FALSE}; default is true
 #' @param margin the margin in which \code{pwelch} should be applied to
 #' @return A list with class \code{'ravetools-pwelch'} that contains the
 #' following items:
@@ -60,12 +69,14 @@ pwelch <- function (
   step <- max(floor(window_len - noverlap + 0.99), 1)
 
   ## Average the slices
-  offset <- seq(1, x_len-window_len+1, by = step)
+  offset <- seq(1, max(x_len-window_len+1, 1), by = step)
 
   N <- length(offset)
 
   re <- sapply(seq_len(N), function(i){
-    a <- detrend_naive(x[offset[i] - 1 + seq_len(window_len)])
+    slice <- x[offset[i] - 1 + seq_len(window_len)]
+    slice[is.na(slice)] <- 0
+    a <- detrend_naive(slice)
     postpad(a$Y * window, nfft)
     # # HermConj = 0 : without the "Hermitian" redundancy
     # a = fftwtools::fftw_r2c(postpad(a$Y * window, nfft), HermConj = 0)
@@ -75,13 +86,28 @@ pwelch <- function (
   re <- Mod(mvfftw_r2c(re))^2
 
   NN <- floor((nfft + 1)/2)
-  spec <- rowMeans(re) / (window_len / 2)^2
-  spec <- spec[seq_len(NN)]
+
+  re <- re[seq_len(NN), , drop = FALSE] / (window_len / 2)^2
+
+  spec <- rowMeans(re)
+
+  # decibel unit so we can calculate sterr of mean
+  re_db <- 10 * log10(re)
+  spec_db <- rowMeans(re_db)
+  if(N > 1) {
+    spec_db_se <- apply(re_db, 1, stats::sd) / sqrt(N - 1)
+  } else {
+    spec_db_se <- rep(N, nrow(re))
+  }
+
   freq <- seq(1, fs / 2, length.out = NN)
 
   res <- structure(list(
     freq = freq,
     spec = spec,
+    spec_db = spec_db,
+    spec_db_se = spec_db_se,
+    df = N - 1,
     window = window,
     noverlap = noverlap,
     nfft = nfft,
@@ -117,17 +143,47 @@ print.pwelch <- function(x, ...){
 
 #' @rdname pwelch
 #' @export
-plot.pwelch <- function(x, log = c("xy", "x", "y", ""), type = 'l', add = FALSE, col = 1, cex = 1, cex.main = cex, cex.sub = cex, cex.lab = cex * 0.8, cex.axis = cex * 0.7, las = 1, main = 'Welch periodogram', xlab, ylab, xlim = NULL, ylim = NULL, ...) {
-  if(!is.null(log)){
+plot.pwelch <- function(
+    x, log = c("xy", "x", "y", ""), se = FALSE, xticks, type = 'l', add = FALSE,
+    col = graphics::par("fg"), col.se = "orange", alpha.se = 0.5, lty = 1, lwd = 1,
+    cex = 1, las = 1, main = 'Welch periodogram', xlab, ylab,
+    xlim = NULL, ylim = NULL, xaxs ="i", yaxs = "i",
+    xline = 1.2 * cex, yline = 2.0 * cex,
+    mar = c(2.6, 3.8, 2.1, 0.6) * (0.5 + cex / 2), mgp = cex * c(2, 0.5, 0),
+    tck = -0.02 * cex, grid = TRUE, ...) {
+  if(!is.null(log) && !identical(log, "")){
     log <- match.arg(log)
   } else {
     log <- ''
   }
   freq <- x$freq
-  spec <- x$spec
 
   if(!length(xlim)){
     xlim <- range(freq)
+  } else {
+    if(x$fs > 500 && xlim[[1]] == 0 && xlim[[2]] < 2.5) {
+      warning("`plot.pwelch`: `xlim` should be the frequency range in native values not log-range. Please check your plot function")
+      xlim <- 10^(xlim)
+    }
+  }
+
+  if(!missing(xticks)) {
+    xticks <- xticks[xticks >= min(xlim) & xticks <= max(xlim)]
+    xlabel <- c(xticks, xlim)
+  } else {
+    xlabel <- pretty(xlim)
+  }
+
+  if( x$df < 1 || log %in% c("x", "") ) {
+    se <- FALSE
+  }
+  spec <- x$spec
+  if( se ) {
+    spec_lb <- 10 * log10(spec) - x$spec_db_se * as.numeric(se)
+    spec_ub <- 10 * log10(spec) + x$spec_db_se * as.numeric(se)
+  } else {
+    spec_lb <- 0
+    spec_ub <- 0
   }
 
   switch (
@@ -135,55 +191,105 @@ plot.pwelch <- function(x, log = c("xy", "x", "y", ""), type = 'l', add = FALSE,
     "xy" = {
       xlab %?<-% 'Log10(Frequency)'
       ylab %?<-% 'Power (dB)'
-      freq <- log10(freq)
-      spec <- log10(spec) * 10
-      xlabel <- pretty(10^xlim)
+
       xat <- xlabel
-      xat[xat <= 0 ] <- 1
+      xat[xat <= 0 ] <- min(freq[freq > 0])
       xat <- log10(xat)
+      freq <- log10(freq)
+      spec <- 10 * log10(spec)
+
       xlim <- range(xat)
+      if(xlim[1] < min(freq)) {
+        xlim[1] <- min(freq)
+      }
     },
     "x" = {
       xlab %?<-% 'Log10(Frequency)'
       ylab %?<-% 'Power'
-      freq <- log10(freq)
-      xlabel <- pretty(10^xlim)
       xat <- xlabel
-      xat[xat <= 0 ] <- 1
+      xat[xat <= 0 ] <- min(freq[freq > 0])
       xat <- log10(xat)
+      freq <- log10(freq)
+      spec <- x$spec
+
       xlim <- range(xat)
+      if(xlim[1] < min(freq)) {
+        xlim[1] <- min(freq)
+      }
+      se <- FALSE
     },
     "y" = {
       xlab %?<-% 'Frequency'
       ylab %?<-% 'Power (dB)'
-      spec <- log10(spec) * 10
-      xlabel <- pretty(xlim)
+      spec <- 10 * log10(spec)
       xat <- xlabel
     },
     {
       xlab %?<-% 'Frequency'
       ylab %?<-% 'Power'
-      xlabel <- pretty(xlim)
+      spec <- x$spec
       xat <- xlabel
+      se <- FALSE
     }
   )
   if(!length(ylim)){
-    ylim <- range(spec)
+    ylim <- range(pretty(spec))
   }
 
-  if(add){
-    graphics::points(freq, spec, type = type, col = col, ...)
-  } else {
+  cex_params <- graphics::par("mgp", "mar", "mai", "cex.main", "cex.lab", "cex.axis", "cex.sub")
+
+  if(!add){
+
+    graphics::par(mgp = mgp, mar = mar)
+    on.exit({
+      do.call(graphics::par, cex_params)
+    })
 
     graphics::plot(
-      freq, spec, type = type, col = col, xlab = xlab, ylab = ylab,
+      range(freq), range(spec), type = "n", xlab = "", ylab = "",
       xlim = xlim, ylim = ylim, main = main, las = las,
-      cex.axis = cex.axis, cex.lab = cex.lab, cex.main = cex.main,
-      cex.sub = cex.sub, axes = FALSE, ...)
-    graphics::axis(1, at = xat, labels = xlabel)
-    graphics::axis(2, at = pretty(ylim), las = 1)
+      axes = FALSE, xaxs = xaxs, yaxs = yaxs,
+      cex = cex, cex.main = cex_params$cex.main * cex,
+      cex.lab = cex_params$cex.lab * cex,
+      cex.axis = cex_params$cex.axis * cex, ...)
+    graphics::axis(1, at = xat, labels = xlabel, tck = tck,
+                   cex = cex, cex.main = cex_params$cex.main * cex,
+                   cex.lab = cex_params$cex.lab * cex,
+                   cex.axis = cex_params$cex.axis * cex)
+    graphics::axis(2, at = pretty(ylim), las = 1, tck = tck,
+                   cex = cex, cex.main = cex_params$cex.main * cex,
+                   cex.lab = cex_params$cex.lab * cex,
+                   cex.axis = cex_params$cex.axis * cex)
+
+    graphics::mtext(side = 2, text = ylab, line = yline,
+                    cex = cex_params$cex.lab * cex)
+    graphics::mtext(side = 1, text = xlab, line = xline,
+                    cex = cex_params$cex.lab * cex)
+
+    if(grid) {
+      graphics::grid()
+    }
+
+    if(!isFALSE(se)) {
+      graphics::polygon(c(freq, rev(freq)), c(spec_lb, rev(spec_ub)),
+              density = NA, border = NA,
+              col = grDevices::adjustcolor(col.se, alpha.f = alpha.se),
+              cex = cex, cex.main = cex_params$cex.main * cex,
+              cex.lab = cex_params$cex.lab * cex,
+              cex.axis = cex_params$cex.axis * cex, )
+    }
+    # graphics::lines(x = freq, y = spec, col = col, lty = lty, lwd = lwd, type = type)
+
   }
-  invisible()
+
+  graphics::points(freq, spec, type = type, col = col, lty = lty, lwd = lwd,
+                   cex = cex, cex.main = cex_params$cex.main * cex,
+                   cex.lab = cex_params$cex.lab * cex,
+                   cex.axis = cex_params$cex.axis * cex, ...)
+  invisible(list(
+    xlim = xlim,
+    ylim = ylim
+  ))
 }
 
 
