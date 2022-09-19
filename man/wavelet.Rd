@@ -4,6 +4,7 @@
 \alias{wavelet}
 \alias{wavelet_kernels}
 \alias{morlet_wavelet}
+\alias{wavelet_cycles_suggest}
 \title{'Morlet' wavelet transform (Discrete)}
 \usage{
 wavelet_kernels(freqs, srate, wave_num)
@@ -15,7 +16,14 @@ morlet_wavelet(
   wave_num,
   precision = c("float", "double"),
   trend = c("constant", "linear", "none"),
+  signature = NULL,
   ...
+)
+
+wavelet_cycles_suggest(
+  freqs,
+  frequency_range = c(2, 200),
+  cycle_range = c(3, 20)
 )
 }
 \arguments{
@@ -35,7 +43,16 @@ smoothness); positive integers are strongly suggested}
 \item{trend}{choices are \code{'constant'}: center the signal at zero;
 \code{'linear'}: remove the linear trend; \code{'none'} do nothing}
 
+\item{signature}{signature to calculate kernel path to save, internally used}
+
 \item{...}{further passed to \code{\link{detrend}};}
+
+\item{frequency_range}{frequency range to calculate, default is 2 to 200}
+
+\item{cycle_range}{number of cycles corresponding to \code{frequency_range}.
+For default frequency range (2 - 200), the default \code{cycle_range} is
+3 to 20. That is, 3 wavelet kernel cycles at 2 Hertz, and 20 cycles at 200
+Hertz.}
 }
 \value{
 \code{wavelet_kernels} returns wavelet kernels to be

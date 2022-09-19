@@ -18,6 +18,12 @@
 #' used for wavelet function; \code{morlet_wavelet} returns a file-based array
 #' if \code{precision} is \code{'float'}, or a list of real and imaginary
 #' arrays if \code{precision} is \code{'double'}
+#' @param frequency_range frequency range to calculate, default is 2 to 200
+#' @param cycle_range number of cycles corresponding to \code{frequency_range}.
+#' For default frequency range (2 - 200), the default \code{cycle_range} is
+#' 3 to 20. That is, 3 wavelet kernel cycles at 2 Hertz, and 20 cycles at 200
+#' Hertz.
+#' @param signature signature to calculate kernel path to save, internally used
 #'
 #' @examples
 #'
@@ -224,13 +230,13 @@ wavelet_kernels <- function(freqs, srate, wave_num){
 
 
 wavelet_kernels2_float <- function(freqs, srate, wave_num,
-                             data_length){
+                             data_length, signature = NULL){
   freqs <- as.double(freqs)
   srate <- as.double(srate)
   wave_num <- as.double(wave_num)
   data_length <- as.integer(data_length)
   kernel_info <- wavelet_kernels(freqs = freqs, srate = srate, wave_num = wave_num)
-  digest <- digest::digest(list(freqs, srate, wave_num, data_length))
+  digest <- digest::digest(list(freqs, srate, wave_num, data_length, signature = signature))
   root_dir <- file.path(tempdir2(check = TRUE), "ravetools")
   if(!dir.exists(root_dir)){
     dir.create(root_dir, showWarnings = FALSE, recursive = TRUE)
@@ -296,7 +302,8 @@ wavelet_kernels2_float <- function(freqs, srate, wave_num,
 }
 
 morlet_wavelet_float <- function(data, freqs, srate, wave_num,
-                           trend = c("constant", "linear", "none"), ...){
+                           trend = c("constant", "linear", "none"),
+                           signature = NULL, ...){
 
   # Instead of using fixed wave_cycles, use flex cycles
   # lower num_cycle is good for low freq, higher num_cycle is good for high freq.
@@ -313,7 +320,7 @@ morlet_wavelet_float <- function(data, freqs, srate, wave_num,
   d_l <- length(data)
 
   # calculate kernel, transform and store
-  fft_waves <- wavelet_kernels2_float(freqs, srate, wave_num, d_l)
+  fft_waves <- wavelet_kernels2_float(freqs, srate, wave_num, d_l, signature = signature)
 
   # normalize data, and fft
   if(trend != "none"){
@@ -388,13 +395,13 @@ morlet_wavelet_float <- function(data, freqs, srate, wave_num,
   output
 }
 
-wavelet_kernels2_double <- function(freqs, srate, wave_num, data_length){
+wavelet_kernels2_double <- function(freqs, srate, wave_num, data_length, signature = NULL){
   freqs <- as.double(freqs)
   srate <- as.double(srate)
   wave_num <- as.double(wave_num)
   data_length <- as.integer(data_length)
   kernel_info <- wavelet_kernels(freqs = freqs, srate = srate, wave_num = wave_num)
-  digest <- digest::digest(list(freqs, srate, wave_num, data_length))
+  digest <- digest::digest(list(freqs, srate, wave_num, data_length, signature = signature))
   root_dir <- file.path(tempdir2(check = TRUE), "ravetools")
   if(!dir.exists(root_dir)){
     dir.create(root_dir, showWarnings = FALSE, recursive = TRUE)
@@ -490,7 +497,8 @@ wavelet_kernels2_double <- function(freqs, srate, wave_num, data_length){
 
 
 morlet_wavelet_double <- function(data, freqs, srate, wave_num,
-                                 trend = c("constant", "linear", "none"), ...){
+                                 trend = c("constant", "linear", "none"),
+                                 signature = NULL, ...){
 
   # Instead of using fixed wave_cycles, use flex cycles
   # lower num_cycle is good for low freq, higher num_cycle is good for high freq.
@@ -507,7 +515,7 @@ morlet_wavelet_double <- function(data, freqs, srate, wave_num,
   d_l <- length(data)
 
   # calculate kernel, transform and store
-  fft_waves <- wavelet_kernels2_double(freqs, srate, wave_num, d_l)
+  fft_waves <- wavelet_kernels2_double(freqs, srate, wave_num, d_l, signature = signature)
 
   # normalize data, and fft
   if(trend != "none"){
@@ -622,17 +630,41 @@ morlet_wavelet_double <- function(data, freqs, srate, wave_num,
 #' @rdname wavelet
 #' @export
 morlet_wavelet <- function(data, freqs, srate, wave_num, precision = c("float", "double"),
-                           trend = c("constant", "linear", "none"), ...) {
+                           trend = c("constant", "linear", "none"),
+                           signature = NULL, ...) {
   precision <- match.arg(precision)
   if(precision == "float"){
     re <- morlet_wavelet_float(data = data, freqs = freqs, srate = srate,
-                               wave_num = wave_num, trend = trend, ...)
+                               wave_num = wave_num, trend = trend,
+                               signature = signature, ...)
   } else {
     re <- morlet_wavelet_double(data = data, freqs = freqs, srate = srate,
-                               wave_num = wave_num, trend = trend, ...)
+                               wave_num = wave_num, trend = trend,
+                               signature = signature, ...)
   }
   return(re)
 }
+
+#' @rdname wavelet
+#' @export
+wavelet_cycles_suggest <- function(
+    freqs,
+    frequency_range = c(2, 200),
+    cycle_range = c(3, 20)
+) {
+  v1 <- log(cycle_range[[1]])
+  v2 <- log(cycle_range[[2]])
+  cycle <- (v2 - v1) / (log(frequency_range[[2]]) - log(frequency_range[[1]])) *
+    (log(freqs) - log(frequency_range[[1]])) + v1
+  cycle <- round(exp(cycle))
+  cycle[cycle <= 0] <- 1
+
+  data.frame(
+    Frequency = freqs,
+    Cycles = cycle
+  )
+}
+
 
 # x <- rnorm(10000)
 # y2 <- morlet_wavelet(x, freqs = 2:200, srate = 2000, wave_num = c(2,20), demean = TRUE)
