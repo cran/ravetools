@@ -1,6 +1,6 @@
-8b6590156b35cbfd2e609db0dbe2bb20 *DESCRIPTION
+00a2037732e11b8c838c41c8af5ee68f *DESCRIPTION
 9aa7d927ea94b1e171430edeff130fd1 *NAMESPACE
-1fcce9114c34f31816c65dda4e7bf27d *NEWS.md
+8bfabfa146e2b03a0011bf340c2d2c2f *NEWS.md
 7fd057b6623c1bc87601d9c0ae4427b4 *R/RcppExports.R
 f666f424d90183f148dc4e14ae3c88d5 *R/aaa.R
 268ef0a670bc5091c9f9ab4e833ef7c5 *R/band-pass.R
@@ -20,7 +20,7 @@ fe6a7346d8e098efae723b1b812dfe7e *R/filter.R
 05780eeff8af8d8bf96747d076b037a3 *R/parse_svec.R
 23fdb4b6f8e7e8e963daa8174fe8ddb4 *R/plot-signals.R
 a8df5dd762a1ea87a27e80117c6f19dc *R/pwelch-diagnosis.R
-a34ad18947573691738f8b8b97ebb578 *R/pwelch.R
+cc66b02f78da2871000f99c918acc34e *R/pwelch.R
 177f4dbf6164c9184e7360fc6c7cb584 *R/raw_to_sexp.R
 afaa7ecb0f2edffe78d912986473b5d0 *R/shift_array.R
 6ce3cd32876b1d1eb67c7993435f8998 *R/wavelet.R
@@ -31,7 +31,7 @@ c217fd798522972c322c89564e22ff3b *README.md
 6076a739edb21c2af0efb83d7e748559 *configure.ac
 d41d8cd98f00b204e9800998ecf8427e *configure.win
 95015f9a37790d3c9a62b87dae183aeb *inst/CITATION
-e679ad5b0797bc4755aadc3751aed105 *inst/WORDLIST
+3192a083a92d8ab46dc5d276dc0782c7 *inst/WORDLIST
 3ecd5c6e3977b20cb11428de740b03e8 *inst/include/TinyParallel.h
 a1a52c1bc7f2d56ade19643264df5f71 *inst/include/TinyParallel/Common.h
 018f53bfed6483f2da57b836cd38ab0d *inst/include/TinyParallel/RMatrix.h
@@ -41,7 +41,7 @@ bfe0500249c396f2522c894575806c4a *inst/include/TinyParallel/TinyThread.h
 cd0b457cccfcae502ec8f393b874dbcb *inst/include/ravetools.h
 119224bb4ba6dc55a5ddb0c4a832bef8 *inst/include/ravetools_RcppExports.h
 36a8c5ad8e670d6c23f41c480b437b56 *inst/include/tthread/fast_mutex.h
-78d2e69c39af9cdfbce4b43c01a28774 *inst/include/tthread/tinythread.h
+207a354ffe1f2ac1f97c42cca5bc85bd *inst/include/tthread/tinythread.h
 9d61a54db6779348e55e3725a8782ea4 *inst/include/tthread/tinythread.inl
 1ef6589cfd9dfc9124190d3554fedb34 *man/band_pass.Rd
 8ba152c2ab6365d34975a27d5bf60c59 *man/baseline_array.Rd
@@ -88,12 +88,13 @@ dfb3d98b0f1bbab70c05c115e5eaa024 *src/ffts.h
 fb38f595dc1cbb4722b2ea4957413da9 *src/threads.cpp
 99d9d931ae44fe46142b5147981f7740 *src/utils.cpp
 d853f168a236cfd7c9c957d7e5f7d850 *src/utils.h
+2b0ffa5bb8acb24b9552484eb787f89a *tests/spelling.R
 75592b5ed191c5ee6a284e88eeb1f4b0 *tests/testthat.R
 69085b0623522a6994454f2cae26ee21 *tests/testthat/test-collapse.R
 6059ec894fdb1c36418d232d1b377cfb *tests/testthat/test-extra.R
 4e1cabd18d38e0335c3a13878739ca73 *tests/testthat/test-fastcov.R
 2f36a6d37851a67f5fad0ba10f667982 *tests/testthat/test-fftw.R
 ca582c96021f7f826ac06e743f2edbb8 *tests/testthat/test-filter.R
-d115d06d3f4ae4237b0b265ed5a6c388 *tests/testthat/test-pwelch.R
+55b35246878aee8c81340bfefac15381 *tests/testthat/test-pwelch.R
 2c0b89a2fb0d2ff6f6097d0681d116b0 *tests/testthat/test-rawToSEXP.R
 719549a3775ac74a20be3ce9c992b7e3 *tests/testthat/test-shiftarray.R
