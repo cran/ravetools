@@ -5,6 +5,10 @@ baselineArray <- function(x, bl, dims, bldims, tidx, per, rest, method) {
     .Call(`_ravetools_baselineArray`, x, bl, dims, bldims, tidx, per, rest, method)
 }
 
+bucketFillVolume <- function(volume, x, y, z, fill) {
+    .Call(`_ravetools_bucketFillVolume`, volume, x, y, z, fill)
+}
+
 collapser_cplx <- function(x, keep, method = 1L, average = 0L) {
     .Call(`_ravetools_collapser_cplx`, x, keep, method, average)
 }
@@ -41,16 +45,32 @@ fftw_r2c <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_r2c`, data, HermConj, fftwplanopt, ret)
 }
 
-mvfftw_r2c <- function(data, fftwplanopt = 0L, ret = NULL) {
-    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, ret)
-}
-
 fftw_c2c <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2c`, data, inverse, fftwplanopt, ret)
 }
 
 fftw_c2r <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2r`, data, HermConj, fftwplanopt, ret)
+}
+
+mvfftw_r2c <- function(data, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, ret)
+}
+
+fftw_r2c_2d <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_r2c_2d`, data, HermConj, fftwplanopt, ret)
+}
+
+fftw_c2c_2d <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_c2c_2d`, data, inverse, fftwplanopt, ret)
+}
+
+fftw_r2c_3d <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_r2c_3d`, data, HermConj, fftwplanopt, ret)
+}
+
+fftw_c2c_3d <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_fftw_c2c_3d`, data, inverse, fftwplanopt, ret)
 }
 
 conjugate <- function(data) {
