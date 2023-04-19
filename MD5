@@ -1,6 +1,6 @@
-8b7b24d3dc97c4bdc185a06cafea992c *DESCRIPTION
+3de90d431a9d7d2748b8532da041e1bb *DESCRIPTION
 505abb351e458f42ad323af81a5f3019 *NAMESPACE
-aed1f99452108f46272a514355aef02c *NEWS.md
+d4f02438dec47b8de75133aecbf0f97f *NEWS.md
 bfce955ff24e507b2d06dba86b7a16e5 *R/RcppExports.R
 5a31078ce92cff91cfdce38801c3d4bf *R/aaa.R
 268ef0a670bc5091c9f9ab4e833ef7c5 *R/band-pass.R
@@ -105,7 +105,7 @@ e63eb58a8ae8d5cbcaac5282c2cf2932 *tests/testthat/test-convolve.R
 2f36a6d37851a67f5fad0ba10f667982 *tests/testthat/test-fftw.R
 6298cf8c2b8c3c70ac961201ded5d6dc *tests/testthat/test-fftw2D.R
 286bda39fceb38cdfb6feeb58baa795a *tests/testthat/test-fftw3D.R
-ca582c96021f7f826ac06e743f2edbb8 *tests/testthat/test-filter.R
+96c48bd67dc8d4d23e561703cd808b95 *tests/testthat/test-filter.R
 55b35246878aee8c81340bfefac15381 *tests/testthat/test-pwelch.R
 2c0b89a2fb0d2ff6f6097d0681d116b0 *tests/testthat/test-rawToSEXP.R
 719549a3775ac74a20be3ce9c992b7e3 *tests/testthat/test-shiftarray.R
