@@ -211,6 +211,10 @@ double quickQuantileInternal(T* &xptr, T* &bufptr, R_xlen_t &xlen, const double 
 }
 
 
+template double quickQuantileInternal<double>(double* &xptr, double* &bufptr, R_xlen_t &xlen, const double &prob);
+template double quickQuantileInternal<int>(int* &xptr, int* &bufptr, R_xlen_t &xlen, const double &prob);
+
+
 SEXP quickQuantile_double(const SEXP &x, const double &prob, const bool &naRm,
                           const bool &inplace) {
 
@@ -262,7 +266,7 @@ SEXP quickQuantile_double(const SEXP &x, const double &prob, const bool &naRm,
   // reuse pointer
   pt0 = REAL(buf);
   pt1 = REAL(buf2);
-  *(REAL(re)) = quickQuantileInternal(pt0, pt1, xlen, prob);
+  *(REAL(re)) = quickQuantileInternal<double>(pt0, pt1, xlen, prob);
 
   UNPROTECT(3);
   return re;
@@ -318,7 +322,7 @@ SEXP quickQuantile_integer(const SEXP &x, const double &prob, const bool &naRm,
   // reuse pointer
   pt0 = INTEGER(buf);
   pt1 = INTEGER(buf2);
-  *(REAL(re)) = quickQuantileInternal(pt0, pt1, xlen, prob);
+  *(REAL(re)) = quickQuantileInternal<int>(pt0, pt1, xlen, prob);
 
   UNPROTECT(3);
   return re;

@@ -25,6 +25,10 @@ columnMedian <- function(x, naRm) {
     .Call(`_ravetools_columnMedian`, x, naRm)
 }
 
+dijkstras_path <- function(position, index, indexOrder, nPoints, nIndices, startIndex, maxDistance, maxEdgeLen, verbose) {
+    .Call(`_ravetools_dijkstras_path`, position, index, indexOrder, nPoints, nIndices, startIndex, maxDistance, maxEdgeLen, verbose)
+}
+
 fastColMeans <- function(x, col, xDim) {
     .Call(`_ravetools_fastColMeans`, x, col, xDim)
 }
@@ -575,6 +579,34 @@ shiftArray <- function(x, alongIdx, unitIdx, shiftAmount) {
 
 getDefaultNumThreads <- function() {
     .Call(`_ravetools_getDefaultNumThreads`)
+}
+
+vcgIsoSurface <- function(array_, thresh) {
+    .Call(`_ravetools_vcgIsoSurface`, array_, thresh)
+}
+
+vcgSmoothImplicit <- function(vb_, it_, lambda_, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight_, SmoothQ) {
+    .Call(`_ravetools_vcgSmoothImplicit`, vb_, it_, lambda_, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight_, SmoothQ)
+}
+
+vcgSmooth <- function(vb_, it_, iter, method, lambda, mu, delta_) {
+    .Call(`_ravetools_vcgSmooth`, vb_, it_, iter, method, lambda, mu, delta_)
+}
+
+vcgUniformResample <- function(vb_, it_, voxelSize, offsetThr, discretizeFlag, multiSampleFlag, absDistFlag, mergeCloseVert, silent) {
+    .Call(`_ravetools_vcgUniformResample`, vb_, it_, voxelSize, offsetThr, discretizeFlag, multiSampleFlag, absDistFlag, mergeCloseVert, silent)
+}
+
+vcgUpdateNormals <- function(vb_, it_, select, pointcloud, silent) {
+    .Call(`_ravetools_vcgUpdateNormals`, vb_, it_, select, pointcloud, silent)
+}
+
+vcgVolume <- function(mesh_) {
+    .Call(`_ravetools_vcgVolume`, mesh_)
+}
+
+vcgSphere <- function(subdiv, normals) {
+    .Call(`_ravetools_vcgSphere`, subdiv, normals)
 }
 
 # Register entry points for exported C++ functions

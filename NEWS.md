@@ -1,3 +1,11 @@
+# ravetools 0.1.4
+
+* Implemented `dijkstra` to find shortest paths in mesh
+* Migrated and incorporated `vcglib`
+* Fixed a `C++` template issue via type explicit calls
+* Fixed `fir1` filter when band-passing signals with incorrect `n`
+* `pwelch` plot works with zero power now; `mv_pwelch` plot error fixed
+
 # ravetools 0.1.3
 
 * Rewrote `band_pass2` to avoid `NA` generated when upper band frequency is `Nyquist`
