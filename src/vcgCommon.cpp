@@ -81,7 +81,7 @@ SEXP vcgIsoSurface(SEXP array_, double thresh) {
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
-
+  return R_NilValue; // -Wall
 }
 
 
@@ -166,6 +166,7 @@ SEXP vcgSmoothImplicit(
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
 
 
@@ -259,6 +260,7 @@ SEXP vcgSmooth(SEXP vb_, SEXP it_, int iter, int method, float lambda, float mu,
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
 
 
@@ -338,6 +340,7 @@ SEXP vcgUniformResample(
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
 
 
@@ -394,6 +397,7 @@ SEXP vcgUpdateNormals(SEXP vb_, SEXP it_, const int & select,
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
 
 
@@ -446,10 +450,11 @@ SEXP vcgVolume( SEXP mesh_ )
     return Rcpp::wrap(Volume);
 
   } catch (std::exception& e) {
-    Rcpp::stop( e.what());
+    Rcpp::stop( e.what() );
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
 
 
@@ -463,8 +468,10 @@ SEXP vcgSphere(const int& subdiv, bool normals) {
     Rcpp::List out = ravetools::IOMesh<ravetools::MyMesh>::vcgToR(m,normals);
     return out;
   } catch (std::exception& e) {
-    Rcpp::stop( e.what());
+    Rcpp::stop( e.what() );
   } catch (...) {
     Rcpp::stop("unknown exception");
   }
+  return R_NilValue; // -Wall
 }
+
