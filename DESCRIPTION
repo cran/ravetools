@@ -2,7 +2,7 @@ Package: ravetools
 Type: Package
 Title: Signal and Image Processing Toolbox for Analyzing Intracranial
         Electroencephalography Data
-Version: 0.1.7
+Version: 0.1.8
 Language: en-US
 Authors@R: c(
     person("Zhengjia", "Wang", email = "dipterix.wang@gmail.com", role = c("aut", "cre")),
@@ -59,7 +59,7 @@ Suggests: fftwtools, bit64, grDevices, microbenchmark,
         freesurferformats, testthat
 LazyData: true
 NeedsCompilation: yes
-Packaged: 2024-07-16 20:58:03 UTC; dipterix
+Packaged: 2024-09-03 20:22:01 UTC; dipterix
 Author: Zhengjia Wang [aut, cre],
   John Magnotti [aut],
   Michael Beauchamp [aut],
@@ -77,4 +77,4 @@ Author: Zhengjia Wang [aut, cre],
     located at src/vcglib/)
 Maintainer: Zhengjia Wang <dipterix.wang@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-07-17 14:40:02 UTC
+Date/Publication: 2024-09-03 20:40:01 UTC

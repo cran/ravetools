@@ -40,26 +40,131 @@ polyval <- function (coef, z)
   return(y)
 }
 
+#' @title Filter window functions
+#' @name filter-window
+#' @param n number of time-points in window
+#' @returns A numeric vector of window with length \code{n}
+#' @examples
+#'
+#' hanning(10)
+#' hamming(11)
+#' blackmanharris(21)
+#'
+NULL
 
+#' @rdname filter-window
+#' @export
 hanning <- function (n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
   if (n == 1) {
-    return(1)
+    c <- 1
+  } else {
+    c <- 0.5 - 0.5 * cos(2 * pi * seq(0, n - 1)/(n - 1))
   }
-  else {
-    return(0.5 - 0.5 * cos(2 * pi * seq(0, n - 1)/(n - 1)))
-  }
+  c
 }
 
+#' @rdname filter-window
+#' @export
 hamming <- function (n) {
-  if (!(n == round(n) && n > 0))
-    stop("hamming: n has to be an integer > 0")
-  if (n == 1)
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
     c <- 1
-  else {
+  } else {
     n <- n - 1
     c <- 0.54 - 0.46 * cos(2 * pi * (0:n)/n)
   }
   c
+}
+
+#' @rdname filter-window
+#' @export
+blackman <- function(n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
+    c <- 1
+  } else {
+    x <- seq.int(0, n - 1) * (2 * pi / (n - 1))
+    c <- 0.42 - 0.5 * cos(x) + 0.08 * cos(x * 2)
+  }
+  c
+}
+
+
+#' @rdname filter-window
+#' @export
+blackmannuttall <- function(n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
+    c <- 1
+  } else {
+    x <- seq.int(0, n - 1) * (2 * pi / (n - 1))
+    c <- 0.3635819 - 0.4891775 * cos(x) + 0.1365995 * cos(x * 2) - 0.0106411 * cos(x * 3)
+  }
+  c
+}
+
+#' @rdname filter-window
+#' @export
+blackmanharris <- function(n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
+    c <- 1
+  } else {
+    x <- seq.int(0, n - 1) * (2 * pi / (n - 1))
+    c <- 0.35875 - 0.48829 * cos(x) + 0.14128 * cos(x * 2) - 0.01168 * cos(x * 3)
+  }
+  c
+}
+
+#' @rdname filter-window
+#' @export
+flattopwin <- function(n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
+    c <- 1
+  } else {
+    x <- seq.int(0, n - 1) * (2 * pi / (n - 1))
+    c <- 0.21557895 - 0.41663158 * cos(x) + 0.277263158 * cos(x * 2) - 0.083578947 * cos(x * 3) + 0.006947368 * cos(x * 4)
+  }
+  c
+}
+
+#' @rdname filter-window
+#' @export
+bohmanwin <- function(n) {
+  if (!(n == round(n) && n > 0)) {
+    stop("n has to be an integer > 0")
+  }
+
+  if (n == 1) {
+    w <- 1
+  } else {
+    N <- n - 1
+    k <- seq(-N / 2, N / 2)
+    w <- (1 - 2 * abs(k) / N) * cos(2 * pi * abs(k) / N) + (1 / pi) *
+      sin(2 * pi * abs(k) / N)
+    w[1] <- w[length(w)] <- 0
+  }
+  w
 }
 
 # ---- fft transform -----------------------------------------------------------
@@ -74,44 +179,7 @@ ifft <- function(x){
   fftw_c2r(x) / length(x)
 }
 
-# ---- fftfilt -----------------------------------------------------------------
 
-fftfilt <- function (b, x, n = NULL) {
-  N <- n
-  l_x <- length(x)
-  l_b <- length(b)
-  if (is.null(n)) {
-    N <- 2^(ceiling(log(l_x + l_b - 1)/log(2)))
-    B <- fft(postpad(b, N))
-    y <- ifft(fft(postpad(x, N)) * B)
-  } else {
-    if (length(n) > 1) {
-      stop("fftfilt: n has to be a scalar")
-    }
-    N <- 2^(ceiling(log(max(N, l_b))/log(2)))
-    L <- N - l_b + 1
-    B <- fft(postpad(b, N))
-    R <- ceiling(l_x/L)
-    y <- numeric(l_x)
-    for (r in 1:R) {
-      lo <- (r - 1) * L + 1
-      hi <- min(r * L, l_x)
-      tmp <- numeric(0)
-      tmp[1:(hi - lo + 1)] <- x[lo:hi]
-      tmp <- ifft(fft(postpad(tmp, N)) * B)
-      hi <- min(lo + N - 1, l_x)
-      y[lo:hi] <- y[lo:hi] + tmp[1:(hi - lo + 1)]
-    }
-  }
-  y <- y[1:l_x]
-  if (is.numeric(b) && is.numeric(x))
-    y <- Re(y)
-  if (!any(as.logical(b - round(b)))) {
-    idx <- !any(as.logical(x - round(x)))
-    y[idx] <- round(y[idx])
-  }
-  y
-}
 
 # ---- Estimation, validation,  ------------------------------------------------
 
