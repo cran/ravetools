@@ -1,7 +1,7 @@
-a807698aa2fbd47773c3aee91f9693a6 *DESCRIPTION
-6f2d04e97b4f07f5dc696c1eb27a0261 *NAMESPACE
-26cb23773c035d86427d52f726582585 *NEWS.md
-ae2299c694a6d799e5b2c9811f7567ad *R/RcppExports.R
+528389d034d7235fa30a8fcc309e2e4b *DESCRIPTION
+ff6a5a56a844325fdcc44eebc5fed003 *NAMESPACE
+32e6735c0bb8b7797e5ea88ff829d8b5 *NEWS.md
+bdd0d72dc9e8fbde55b193f70ccef83f *R/RcppExports.R
 5121aba49e3f45f0de00d5d89842f050 *R/aaa.R
 4da6b5590d3b6afb05937a9ac30896ed *R/band-pass.R
 4a9bb126c745f579e2934aa6f10a5171 *R/baseline.R
@@ -40,7 +40,7 @@ c1f8d2e3fd08df26ebcefd1495ad7575 *R/multitaper.R
 ee46c8be97414bf83d67afd8973d0e2e *R/reexports.R
 c928f4a187e18d92f6faa7e98c0d343a *R/rgl.R
 77bdb9cc75cfc4a27f28ccd95f1ef23e *R/shift_array.R
-24d1dc26a53189a70a3772e39757ca2e *R/vcg.R
+fbcded6ba749092a80db8088462df5b7 *R/vcg.R
 b101742c83b9661566ae1a962d0c64a4 *R/wavelet.R
 dd831382d464a4862a6d85a97a2a8dec *README.md
 6292f50cb0d756bd1d05d12904cbacbf *cleanup
@@ -107,6 +107,7 @@ b8d39a2ab307aa7175ebfa34d0043d80 *man/rgl-call.Rd
 9bf35c4101675176b564a20f7388a282 *man/shift_array.Rd
 7ec90e06a79929c8027db8c12b570a25 *man/vcg_isosurface.Rd
 4beadfa3b73936cc6ee2931e24560fa1 *man/vcg_mesh_volume.Rd
+075506753d1efd5c5822e7b9ee959eb7 *man/vcg_raycaster.Rd
 d7ef0ff6197d03c35c3cb69ee873edf6 *man/vcg_smooth.Rd
 c75cdfb8e483e93e9bc7b7b62ae8874b *man/vcg_sphere.Rd
 3f8b5fca203bc9b43b009bc9683bae2d *man/vcg_uniform_remesh.Rd
@@ -114,7 +115,7 @@ c75cdfb8e483e93e9bc7b7b62ae8874b *man/vcg_sphere.Rd
 2be4d8912f2bc68325accb8a065606e5 *man/wavelet.Rd
 e893449141ba274749474cadfc77e33f *src/Makevars.in
 c842a1d45b0cc7e6725230f861eed351 *src/Makevars.win
-a7b1278a482d2a645fb17e0d1e74d42b *src/RcppExports.cpp
+75ae7308630ca2489d801198ca2b1058 *src/RcppExports.cpp
 30ed5d3036469253ab7c26bbaa8ae11a *src/baseline.cpp
 1b714ea6e452ca2dddcce959edb2cb14 *src/bucketFill.cpp
 845dd4e895f38ba9c5472755bfa04702 *src/collapse-cplx.cpp
@@ -144,7 +145,7 @@ b09c7b0d3f0a34e93e8771f3646cc129 *src/glVector3.h
 fb38f595dc1cbb4722b2ea4957413da9 *src/threads.cpp
 99d9d931ae44fe46142b5147981f7740 *src/utils.cpp
 d853f168a236cfd7c9c957d7e5f7d850 *src/utils.h
-aeb0d80f655514f26e6fc30ca6019244 *src/vcgCommon.cpp
+c4677467dfce408394d1b1181386b9d7 *src/vcgCommon.cpp
 cc1e4e4aeef673a55632ab8cd94d1698 *src/vcgCommon.h
 84dcc94da3adb52b53ae4fa38fe49e5d *src/vcglib/LICENSE.txt
 eae2c83ab96cf8b47f7a1a5ba57df951 *src/vcglib/README.md
