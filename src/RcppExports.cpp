@@ -3464,6 +3464,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// resample3D
+SEXP resample3D(const SEXP& arrayDim, const SEXP& fromArray, const SEXP& newVoxToWorldTransposed, const SEXP& oldVoxToWorldTransposed, const SEXP& na);
+RcppExport SEXP _ravetools_resample3D(SEXP arrayDimSEXP, SEXP fromArraySEXP, SEXP newVoxToWorldTransposedSEXP, SEXP oldVoxToWorldTransposedSEXP, SEXP naSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const SEXP& >::type arrayDim(arrayDimSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type fromArray(fromArraySEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type newVoxToWorldTransposed(newVoxToWorldTransposedSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type oldVoxToWorldTransposed(oldVoxToWorldTransposedSEXP);
+    Rcpp::traits::input_parameter< const SEXP& >::type na(naSEXP);
+    rcpp_result_gen = Rcpp::wrap(resample3D(arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na));
+    return rcpp_result_gen;
+END_RCPP
+}
 // shiftArray
 SEXP shiftArray(const SEXP& x, const R_xlen_t& alongIdx, const R_xlen_t& unitIdx, const SEXP& shiftAmount);
 RcppExport SEXP _ravetools_shiftArray(SEXP xSEXP, SEXP alongIdxSEXP, SEXP unitIdxSEXP, SEXP shiftAmountSEXP) {
@@ -3608,7 +3623,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // vcgRaycaster
-RcppExport SEXP vcgRaycaster(SEXP vb_, SEXP it_, const Rcpp::NumericVector& rayOrigin, const Rcpp::NumericVector& rayDirection, const float& maxDistance, const bool& bothSides, const int& threads);
+SEXP vcgRaycaster(SEXP vb_, SEXP it_, const Rcpp::NumericVector& rayOrigin, const Rcpp::NumericVector& rayDirection, const float& maxDistance, const bool& bothSides, const int& threads);
 RcppExport SEXP _ravetools_vcgRaycaster(SEXP vb_SEXP, SEXP it_SEXP, SEXP rayOriginSEXP, SEXP rayDirectionSEXP, SEXP maxDistanceSEXP, SEXP bothSidesSEXP, SEXP threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -3621,6 +3636,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool& >::type bothSides(bothSidesSEXP);
     Rcpp::traits::input_parameter< const int& >::type threads(threadsSEXP);
     rcpp_result_gen = Rcpp::wrap(vcgRaycaster(vb_, it_, rayOrigin, rayDirection, maxDistance, bothSides, threads));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vcgKDTreeSearch
+SEXP vcgKDTreeSearch(SEXP target_, SEXP query_, unsigned int k, unsigned int nPointsPerCell, unsigned int maxDepth);
+RcppExport SEXP _ravetools_vcgKDTreeSearch(SEXP target_SEXP, SEXP query_SEXP, SEXP kSEXP, SEXP nPointsPerCellSEXP, SEXP maxDepthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type target_(target_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type query_(query_SEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type nPointsPerCell(nPointsPerCellSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type maxDepth(maxDepthSEXP);
+    rcpp_result_gen = Rcpp::wrap(vcgKDTreeSearch(target_, query_, k, nPointsPerCell, maxDepth));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3937,6 +3967,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_rawToInt64", (DL_FUNC) &_ravetools_rawToInt64, 1},
     {"_ravetools_rawToFloat", (DL_FUNC) &_ravetools_rawToFloat, 1},
     {"_ravetools_rawToString", (DL_FUNC) &_ravetools_rawToString, 1},
+    {"_ravetools_resample3D", (DL_FUNC) &_ravetools_resample3D, 5},
     {"_ravetools_shiftArray", (DL_FUNC) &_ravetools_shiftArray, 4},
     {"_ravetools_getDefaultNumThreads", (DL_FUNC) &_ravetools_getDefaultNumThreads, 0},
     {"_ravetools_vcgIsoSurface", (DL_FUNC) &_ravetools_vcgIsoSurface, 2},
@@ -3948,6 +3979,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_vcgSphere", (DL_FUNC) &_ravetools_vcgSphere, 2},
     {"_ravetools_vcgDijkstra", (DL_FUNC) &_ravetools_vcgDijkstra, 4},
     {"_ravetools_vcgRaycaster", (DL_FUNC) &_ravetools_vcgRaycaster, 7},
+    {"_ravetools_vcgKDTreeSearch", (DL_FUNC) &_ravetools_vcgKDTreeSearch, 5},
     {"_ravetools_RcppExport_registerCCallable", (DL_FUNC) &_ravetools_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

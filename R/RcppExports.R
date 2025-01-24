@@ -573,6 +573,10 @@ rawToString <- function(x) {
     .Call(`_ravetools_rawToString`, x)
 }
 
+resample3D <- function(arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na) {
+    .Call(`_ravetools_resample3D`, arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na)
+}
+
 shiftArray <- function(x, alongIdx, unitIdx, shiftAmount) {
     .Call(`_ravetools_shiftArray`, x, alongIdx, unitIdx, shiftAmount)
 }
@@ -615,6 +619,10 @@ vcgDijkstra <- function(vb_, it_, source, maxdist_) {
 
 vcgRaycaster <- function(vb_, it_, rayOrigin, rayDirection, maxDistance, bothSides, threads = 1L) {
     .Call(`_ravetools_vcgRaycaster`, vb_, it_, rayOrigin, rayDirection, maxDistance, bothSides, threads)
+}
+
+vcgKDTreeSearch <- function(target_, query_, k, nPointsPerCell = 16L, maxDepth = 64L) {
+    .Call(`_ravetools_vcgKDTreeSearch`, target_, query_, k, nPointsPerCell, maxDepth)
 }
 
 # Register entry points for exported C++ functions
