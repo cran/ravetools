@@ -1,6 +1,6 @@
-74c5a79915b8148ae316347317a483ef *DESCRIPTION
+b4b0bee94948a712146183e8f7742518 *DESCRIPTION
 7ede9f59cf89a264a9fc49194e6b1463 *NAMESPACE
-2f4167db110d3207c934df0fee430769 *NEWS.md
+c4315d35d2445b5df0adf6fdc88d66ce *NEWS.md
 a67f09a3f879fa6dc5b9e4f9ec7fe5f3 *R/RcppExports.R
 5121aba49e3f45f0de00d5d89842f050 *R/aaa.R
 4da6b5590d3b6afb05937a9ac30896ed *R/band-pass.R
@@ -11,7 +11,7 @@ a67f09a3f879fa6dc5b9e4f9ec7fe5f3 *R/RcppExports.R
 14520f237272426b0c5a0216444f3931 *R/collapse.R
 ca1f1291bcd624fd92b2beae990bec31 *R/convolve.R
 54458f6cc843ed04c76ed4dd5ec5db0b *R/detrend.R
-492b6d61c00a4b6d1ee00cad612f460a *R/dijkstras-path.R
+770d9720d47a1bf11902765ae34e4aa1 *R/dijkstras-path.R
 44e9b47c9ca1a129fd56ddf45c16432a *R/fast_cov.R
 167524f6f376395165d448684a4e642f *R/fast_quantile.R
 029457f31fc4968890d32cf22a02877e *R/filter-butter.R
@@ -217,7 +217,7 @@ cb8b3327381c9df463c734c6b7ab20f3 *src/vcglib/vcg/complex/algorithms/outline_supp
 d1076e6a3cae217cd2f8da8b3815f3d7 *src/vcglib/vcg/complex/algorithms/parametrization/poisson_solver.h
 7639a00a402a94e8f59d191c2c5cfb30 *src/vcglib/vcg/complex/algorithms/parametrization/tangent_field_operators.h
 caba81eff561896d27e9e9f15828503d *src/vcglib/vcg/complex/algorithms/parametrization/uv_utils.h
-2db707c417d5c42b02a4db8106485605 *src/vcglib/vcg/complex/algorithms/parametrization/voronoi_atlas.h
+45d118b462ad470efc30a505fe2a7406 *src/vcglib/vcg/complex/algorithms/parametrization/voronoi_atlas.h
 1ff4fe373078e9cdd353cc06084cc6a5 *src/vcglib/vcg/complex/algorithms/point_matching_scale.h
 d63ac493ae5dbcdd130ac3df08ed73e8 *src/vcglib/vcg/complex/algorithms/point_outlier.h
 88f1b477a848b5b6a0be8b84fd1c0f3e *src/vcglib/vcg/complex/algorithms/point_sampling.h
@@ -252,11 +252,11 @@ dc7bb786009b8478e30c7cb985ba361b *src/vcglib/vcg/complex/algorithms/update/flag.
 ad72d1462a2bdcb47c7212eeafc9b181 *src/vcglib/vcg/complex/algorithms/update/selection.h
 80d5fd99510c182a12f3b34aee643a99 *src/vcglib/vcg/complex/algorithms/update/texture.h
 9f0d76710e92888639b8aa6f2419a197 *src/vcglib/vcg/complex/algorithms/update/topology.h
-24d1ae86913c77814c5bbdab000aa32c *src/vcglib/vcg/complex/algorithms/voronoi_processing.h
+fabf44647b3878c1ec9bf541471c8f1e *src/vcglib/vcg/complex/algorithms/voronoi_processing.h
 d02e737055ad15ac9bf9e7173d8362fe *src/vcglib/vcg/complex/algorithms/voronoi_remesher.h
 c004fce00fe790d7a0574a546bfedcc2 *src/vcglib/vcg/complex/algorithms/voronoi_volume_sampling.h
 6a893e63f5ecc640bc43b39a7847bd28 *src/vcglib/vcg/complex/all_types.h
-005d98822ddad9f6b86624dfae0bbfa9 *src/vcglib/vcg/complex/allocate.h
+9c6526a0d6afe409b8bd0dd492f7143f *src/vcglib/vcg/complex/allocate.h
 57369f6673f61a897d283b380a76ba58 *src/vcglib/vcg/complex/append.h
 1914721d18a325ba9ffbd8b06a036db4 *src/vcglib/vcg/complex/base.h
 15c4e55f74c0f329f2fc5266f13ebfb3 *src/vcglib/vcg/complex/complex.h
@@ -390,7 +390,7 @@ bca1c13feb43a469cf25b05784e12837 *src/vcglib/vcg/space/space.h
 02a007d4e7bcc9ecd0e0658dae9e2123 *src/vcglib/vcg/space/texcoord2.h
 59162cb3aeaaa7903389ddc5e358b18f *src/vcglib/vcg/space/triangle2.h
 739ff303f9ca49a31f26e705fa2143f4 *src/vcglib/vcg/space/triangle3.h
-3bdab7437b3fcb6beb4c0ae6a93fea1b *src/vcglib/wrap/callback.h
+14a7c845f127c72f86d8ffaba0915f83 *src/vcglib/wrap/callback.h
 606c1ac41e16531b813d29553ea0bb68 *src/vcglib/wrap/utils.h
 2b0ffa5bb8acb24b9552484eb787f89a *tests/spelling.R
 5deb6bda509bd7c33e149963b5c2d003 *tests/testthat.R
