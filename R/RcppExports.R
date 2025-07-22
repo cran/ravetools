@@ -605,6 +605,10 @@ vcgUpdateNormals <- function(vb_, it_, select, pointcloud, silent) {
     .Call(`_ravetools_vcgUpdateNormals`, vb_, it_, select, pointcloud, silent)
 }
 
+vcgEdgeSubdivision <- function(vb_, it_) {
+    .Call(`_ravetools_vcgEdgeSubdivision`, vb_, it_)
+}
+
 vcgVolume <- function(mesh_) {
     .Call(`_ravetools_vcgVolume`, mesh_)
 }
@@ -623,6 +627,10 @@ vcgRaycaster <- function(vb_, it_, rayOrigin, rayDirection, maxDistance, bothSid
 
 vcgKDTreeSearch <- function(target_, query_, k, nPointsPerCell = 16L, maxDepth = 64L) {
     .Call(`_ravetools_vcgKDTreeSearch`, target_, query_, k, nPointsPerCell, maxDepth)
+}
+
+vcgSubset <- function(vb_, it_, selector_) {
+    .Call(`_ravetools_vcgSubset`, vb_, it_, selector_)
 }
 
 # Register entry points for exported C++ functions
