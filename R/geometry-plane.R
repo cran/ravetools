@@ -31,7 +31,7 @@ plane_geometry <- function(width = 1, height = 1, shape = c(2, 2)) {
   grid_size <- shape - 1
 
   grid_size <- floor(grid_size)
-  if(length(grid_size) == 1) {
+  if (length(grid_size) == 1) {
     grid_size <- c(grid_size, grid_size)
   } else {
     grid_size <- grid_size[c(1, 2)]
@@ -89,6 +89,7 @@ plane_geometry <- function(width = 1, height = 1, shape = c(2, 2)) {
 #' \code{TRUE} for a warm start
 #' @param diagnostic whether to plot diagnostic figures showing the morphing
 #' progress.
+#' @param n_iters number of iterations; default is five
 #' @returns The projected vertex locations, same order as \code{initial_positions}.
 #'
 #' @examples
@@ -156,17 +157,17 @@ plane_geometry <- function(width = 1, height = 1, shape = c(2, 2)) {
 #' @export
 project_plane <- function(
     target, width, height, shape, initial_positions,
-    translate_first = TRUE, diagnostic = FALSE) {
+    translate_first = TRUE, diagnostic = FALSE, n_iters = 5) {
 
   target <- ensure_mesh3d(target)
   plane <- plane_geometry(width = width, height = height, shape = shape)
 
   # set initial electrode locations
   n_contacts <- ncol(plane$vb)
-  if(n_contacts == 1) {
+  if (n_contacts == 1) {
     initial_positions <- matrix(initial_positions, nrow = 1, ncol = 3)
   } else {
-    if(!is.matrix(initial_positions) && is.array(initial_positions)) {
+    if (!is.matrix(initial_positions) && is.array(initial_positions)) {
       dm <- dim(initial_positions)
       dim(initial_positions) <- c(dm[[1]] * dm[[2]], dm[[3]])
     }
@@ -183,7 +184,7 @@ project_plane <- function(
 
   # register utility functions
   diagnose_plot <- function() {
-    if(!diagnostic) { return() }
+    if (!diagnostic) { return() }
 
     x <- t(cbind(plane_orig$vb[1:3, , drop = FALSE], plane$vb[1:3, , drop = FALSE]))
     colnames(x) <- c("x", "y", "z")
@@ -202,11 +203,11 @@ project_plane <- function(
   }
 
   # first projection - project the whole grid center to the surface
-  if( translate_first ) {
+  if ( translate_first ) {
 
     # compute the distances from contacts to the surface
     search_results <- vcg_kdtree_nearest(target, query = plane, k = 1)
-    if(mean(search_results$distance) > 1) {
+    if (mean(search_results$distance) > 1) {
 
       # translate is needed when all contacts are atleast 1mm away from the surface
 
@@ -222,10 +223,10 @@ project_plane <- function(
       # Find within contacts with ray-casting intersection
       idx_has_intersection <- which(raycaster$has_intersection)
 
-      if(length(idx_has_intersection)) {
+      if (length(idx_has_intersection)) {
 
         contact_idx <- floor((shape[[2]] - 1) / 2) * shape[[1]] + round(shape[[1]] / 2)
-        if(!contact_idx %in% idx_has_intersection) {
+        if (!contact_idx %in% idx_has_intersection) {
           idx2 <- which.min(abs(raycaster$distance)[idx_has_intersection])
           contact_idx <- idx_has_intersection[idx2][[1]]
         }
@@ -251,35 +252,37 @@ project_plane <- function(
   index_sampler <- c(sample(n_contacts), sample(n_contacts), sample(n_contacts), sample(n_contacts))
   lambda_fun <- function(iter) {
     # 0.2, 0.1, 0.2, 0.2, 0.2
-    if(iter <= n_contacts) { return(0.2) }
-    if(iter <= 2 * n_contacts) { return(0.1) }
-    if(iter <= 3 * n_contacts) { return(0.2) }
-    if(iter <= 4 * n_contacts) { return(0.2) }
-    if(iter <= 5 * n_contacts) { return(0.2) }
+    if (iter <= n_contacts) { return(0.2) }
+    if (iter <= 2 * n_contacts) { return(0.1) }
+    if (iter <= 3 * n_contacts) { return(0.2) }
+    if (iter <= 4 * n_contacts) { return(0.2) }
+    if (iter <= 5 * n_contacts) { return(0.2) }
+    return(0.1)
   }
 
   plane_diag <- sqrt(sum(c(width, height)^2))
   contact_diag <- sqrt(sum(c(width / (shape[[1]] + 1), height / (shape[[1]] + 1))^2)) + 1e-5
   radius_ratio <- function(iter) {
-    if(iter <= min(n_contacts, 100)) { return( 0.5 ) }
-    if(iter <= n_contacts) { return(0.3) }
-    if(iter <= 2 * n_contacts) { return(0.2) }
-    if(iter <= 3 * n_contacts) { return(0.2) }
-    if(iter <= 4 * n_contacts) { return(0.3) }
-    if(iter <= 5 * n_contacts) { return(0.1) }
+    if (iter <= min(n_contacts, 100)) { return( 0.5 ) }
+    if (iter <= n_contacts) { return(0.3) }
+    if (iter <= 2 * n_contacts) { return(0.2) }
+    if (iter <= 3 * n_contacts) { return(0.2) }
+    if (iter <= 4 * n_contacts) { return(0.3) }
+    if (iter <= 5 * n_contacts) { return(0.1) }
+    return(0.05)
   }
   radius_fun <- function(iter) {
     max(radius_ratio(iter) * plane_diag, contact_diag)
   }
 
   # iterate
-  for(iter in seq_len(n_contacts * 5)) {
+  for (iter in seq_len(n_contacts * n_iters)) {
 
     lambda <- lambda_fun(iter)
     radius <- radius_fun(iter)
 
     # for every grand iteration, update the projection twice
-    if(iter %% floor(n_contacts / 2) == 1) {
+    if (iter %% floor(n_contacts / 2) == 1) {
       search_results <- vcg_kdtree_nearest(target, query = plane, k = 1)
     }
 
@@ -293,10 +296,10 @@ project_plane <- function(
     # but we do not want to bend the electrode too much
     dot_prod <- abs(colSums(proj_dir * plane$normals[1:3, ]))
 
-    if(iter <= n_contacts) {
+    if (iter <= n_contacts) {
       # These are easy ones: the contacts are close to the mesh
       # or the projection aligns with the normals
-      if(stats::runif(1) > 0.85) {
+      if (stats::runif(1) > 0.85) {
         # have prob to project distanced contacts
         min_idx <- sample(
           c(which(search_results$distance >= stats::quantile(search_results$distance, 0.9))),
@@ -316,11 +319,11 @@ project_plane <- function(
     surface_points <- target$vb[1:3, search_results$index[neib], drop = FALSE]
     update_vec <- rowMeans(surface_points - plane$vb[1:3, neib, drop = FALSE])
 
-    if(dot_prod[min_idx] <= 0.86) {
+    if (dot_prod[min_idx] <= 0.86) {
       # the projection direction and plane normals have at least 30-degree dis-agreement
       # use the plane normal instead
       update_vec2 <- plane$normals[1:3, min_idx] * sqrt(sum(update_vec^2))
-      if(sum(update_vec2 * update_vec) <= 0) {
+      if (sum(update_vec2 * update_vec) <= 0) {
         update_vec2 <- -update_vec2
       }
       update_vec <- update_vec2
@@ -334,12 +337,12 @@ project_plane <- function(
 
     # smooth
     plane <- vcg_update_normals(plane, weight = "area")
-    if(iter %% n_contacts == 0) {
+    if (iter %% n_contacts == 0) {
       plane <- vcg_smooth_explicit(plane, type = "taubin", iteration = 2)
       plane <- vcg_update_normals(plane, weight = "area")
     }
 
-    if( diagnostic && iter %% 100 == 0) {
+    if ( diagnostic && iter %% 100 == 0) {
       qdist <- stats::quantile(proj_dist, c(0.5, 1))
       dmsg <- sprintf("\r%d, current_dist=%.2f, media_dist=%.2f, max_dist=%.2f",
                       iter, proj_dist[min_idx], qdist[[1]], qdist[[2]])
@@ -376,7 +379,7 @@ project_plane <- function(
   # search_results$distance[raycaster_invalid, 1]
   # plane$normals[,1]
 
-  if(any(raycaster_invalid)) {
+  if (any(raycaster_invalid)) {
 
     # ray-casting not working
     # change ray directions so the direction points towards
@@ -394,7 +397,7 @@ project_plane <- function(
     raycaster2_valid <- raycaster2$has_intersection &
       abs(raycaster2$distance) < search_results$distance[raycaster_invalid, 1] * 2
 
-    if(any(raycaster2_valid)) {
+    if (any(raycaster2_valid)) {
       idx <- which(raycaster_invalid)[raycaster2_valid]
       raycaster$intersection[, idx] <- raycaster2$intersection[, raycaster2_valid]
       raycaster_valid[idx] <- TRUE
@@ -406,9 +409,9 @@ project_plane <- function(
   plane <- vcg_update_normals(plane, weight = "area")
   plane <- vcg_smooth_explicit(plane, type = "taubin", iteration = 2)
 
-  if(diagnostic && system.file(package = "ieegio") != '') {
+  if (diagnostic && system.file(package = "ieegio") != "") {
     # for RAVE users only
-    ieegio <- asNamespace('ieegio')
+    ieegio <- asNamespace("ieegio")
     merged <- merge(ieegio$as_ieegio_surface(plane),
                     ieegio$as_ieegio_surface(target),
                     merge_type = "geometry", verbose = FALSE)
@@ -425,7 +428,7 @@ project_plane <- function(
               search_results$distance[, 1], rep(0, ncol(target$vb))
             ),
             has_intersection = c(
-              raycaster$has_intersection * 3+1, rep(0, ncol(target$vb))
+              raycaster$has_intersection * 3 + 1, rep(0, ncol(target$vb))
             )
           )
         ),

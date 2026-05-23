@@ -11,7 +11,8 @@ project_plane(
   shape,
   initial_positions,
   translate_first = TRUE,
-  diagnostic = FALSE
+  diagnostic = FALSE,
+  n_iters = 5
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ plane center is far from the surface; default is \code{FALSE}; set to
 
 \item{diagnostic}{whether to plot diagnostic figures showing the morphing
 progress.}
+
+\item{n_iters}{number of iterations; default is five}
 }
 \value{
 The projected vertex locations, same order as \code{initial_positions}.

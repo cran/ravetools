@@ -53,12 +53,16 @@ fftw_c2r <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2r`, data, HermConj, fftwplanopt, ret)
 }
 
-mvfftw_r2c <- function(data, fftwplanopt = 0L, ret = NULL) {
-    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, ret)
+mvfftw_r2c <- function(data, fftwplanopt = 0L, HermConj = 0L, ret = NULL) {
+    .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, HermConj, ret)
 }
 
-mvfft_c2r <- function(data, fftwplanopt = 0L, retrows = 0L, ret = NULL) {
-    .Call(`_ravetools_mvfft_c2r`, data, fftwplanopt, retrows, ret)
+mvfftw_c2c <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
+    .Call(`_ravetools_mvfftw_c2c`, data, inverse, fftwplanopt, ret)
+}
+
+mvfftw_c2r <- function(data, fftwplanopt = 0L, retrows = 0L, ret = NULL) {
+    .Call(`_ravetools_mvfftw_c2r`, data, fftwplanopt, retrows, ret)
 }
 
 fftw_r2c_2d <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
@@ -245,8 +249,8 @@ Quaternion__set_from_axis_angle <- function(self, axis, angle) {
     invisible(.Call(`_ravetools_Quaternion__set_from_axis_angle`, self, axis, angle))
 }
 
-Quaternion__set_from_rotation_matrix <- function(self, m) {
-    invisible(.Call(`_ravetools_Quaternion__set_from_rotation_matrix`, self, m))
+Quaternion__set_from_rotation_matrix <- function(self, m, fix_qfac) {
+    invisible(.Call(`_ravetools_Quaternion__set_from_rotation_matrix`, self, m, fix_qfac))
 }
 
 Quaternion__set_from_unit_vectors <- function(self, v_from, v_to) {

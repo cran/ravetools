@@ -1,5 +1,5 @@
 #' @title Calculate Contrasts of Arrays in Different Methods
-#' @description Provides five methods to baseline an array and calculate
+#' @description Provides seven methods to baseline an array and calculate
 #' contrast.
 #' @param x array (tensor) to calculate contrast
 #' @param along_dim integer range from 1 to the maximum dimension of \code{x}.
@@ -8,9 +8,10 @@
 #' into baseline window? Each index ranges from 1 to \code{dim(x)[[along_dim]]}.
 #' See Details.
 #' @param unit_dims integer vector, baseline unit: see Details.
-#' @param method character, baseline method options are:
-#' \code{"percentage"}, \code{"sqrt_percentage"}, \code{"decibel"},
-#' \code{"zscore"}, and \code{"sqrt_zscore"}
+#' @param method character, baseline method; one of \code{"percentage"},
+#' \code{"sqrt_percentage"}, \code{"decibel"}, \code{"zscore"},
+#' \code{"sqrt_zscore"}, \code{"db_zscore"}, or \code{"subtract_mean"}.
+#' See Details.
 #' @param baseline_subarray sub-arrays that should be used to calculate
 #' baseline; default is \code{NULL} (automatically determined by
 #' \code{baseline_indexpoints}).
@@ -22,10 +23,10 @@
 #' from different locations. For each location, we record \code{n} sessions.
 #' For each session, the signal is further decomposed into frequency-time
 #' domain. In this case, we have the input \code{x} in the following form:
-#' \deqn{session x frequency x time x location}
+#' \deqn{session \times frequency \times time \times location}
 #' Now we want to calibrate signals for each session, frequency and location
 #' using the first 100 time points as baseline points, then the code will be
-#' \deqn{baseline_array(x, along_dim=3, baseline_window=1:100, unit_dims=c(1,2,4))}
+#' \code{baseline_array(x, along_dim=3, baseline_window=1:100, unit_dims=c(1,2,4))}
 #' \code{along_dim=3} is dimension of time, in this case, it's the
 #' third dimension of \code{x}. \code{baseline_indexpoints=1:100}, meaning
 #' the first 100 time points are used to calculate baseline.
@@ -38,8 +39,8 @@
 #' same session and location also share the same baseline. In this case,
 #' we assign \code{unit_dims=c(1,4)}.
 #'
-#' There are five baseline methods. They fit for different types of data.
-#' Denote \eqn{z} is an unit signal, \eqn{z_0} is its baseline slice. Then
+#' There are seven baseline methods. They fit for different types of data.
+#' Denote \eqn{z} is a unit signal and \eqn{z_0} is its baseline slice. Then
 #' these baseline methods are:
 #'
 #' \describe{
@@ -61,7 +62,7 @@
 #' \deqn{
 #'   10 \times ( \log_{10}(z) - \bar{\log_{10}(z_{0})} )
 #' }{
-#'   10 * ( log10 (z) - mean( log10(z_0) ) )
+#'   10 * ( log10(z) - mean( log10(z_0) ) )
 #' }
 #' }
 #' \item{\code{"zscore"}}{
@@ -76,6 +77,22 @@
 #'   \frac{\sqrt{z}-\bar{\sqrt{z_{0}}}}{sd(\sqrt{z_{0}})}
 #' }{
 #'   (sqrt(z) - mean( sqrt(z_0) )) / sd( sqrt(z_0) )
+#' }
+#' }
+#' \item{\code{"db_zscore"}}{
+#' Z-score applied in the decibel (10log10) domain:
+#' \deqn{
+#'   \frac{10\log_{10}(z) - \bar{10\log_{10}(z_{0})}}{sd(10\log_{10}(z_{0}))}
+#' }{
+#'   ( log10(z) - mean( log10(z_0) ) ) / sd( log10(z_0) )
+#' }
+#' }
+#' \item{\code{"subtract_mean"}}{
+#' Simple mean subtraction with no scaling:
+#' \deqn{
+#'   z - \bar{z_{0}}
+#' }{
+#'   z - mean(z_0)
 #' }
 #' }
 #'
@@ -101,7 +118,7 @@
 #' # ----- baseline percentage change ------
 #'
 #' # Using base functions
-#' re1 <- aperm(apply(x, c(1,2,4), function(y){
+#' re1 <- aperm(apply(x, c(1,2,4), function(y) {
 #'   m <- mean(y[baseline_window])
 #'   (y/m - 1) * 100
 #' }), c(2,3,1,4))
@@ -123,13 +140,13 @@
 #' x <- array(rnorm(prod(dims))^2, dims)
 #' # Set baseline window to be arbitrary 10 timepoints
 #' baseline_window <- seq_len(100)
-#' f1 <- function(){
-#'   aperm(apply(x, c(1,2,4), function(y){
+#' f1 <- function() {
+#'   aperm(apply(x, c(1,2,4), function(y) {
 #'     m <- mean(y[baseline_window])
 #'     (y/m - 1) * 100
 #'   }), c(2,3,1,4))
 #' }
-#' f2 <- function(){
+#' f2 <- function() {
 #'   # equivalent as bl = x[,,baseline_window, ]
 #'   #
 #'   baseline_array(x, along_dim = 3,
@@ -150,16 +167,16 @@ baseline_array <- function(x, along_dim, unit_dims = seq_along(dim(x))[-along_di
   along_dim <- as.integer(along_dim)
   unit_dims <- as.integer(unit_dims)
 
-  stopifnot2(along_dim >=1 && along_dim <= length(dims), msg = paste0(
-    sQuote('along_dim'), ' is invalid, it must be an integer from 1 to ',
+  stopifnot2(along_dim >= 1 && along_dim <= length(dims), msg = paste0(
+    sQuote("along_dim"), " is invalid, it must be an integer from 1 to ",
     length(dims)
   ))
 
   # unit_dims is baseline unit,
-  stopifnot2(!any(is.na(unit_dims)), msg = paste0(sQuote('unit_dims'), ' contains NAs'))
-  stopifnot2(all(unit_dims %in% seq_along(dims)), msg = paste0(sQuote('unit_dims'), ' has invalid dimensions'))
+  stopifnot2(!any(is.na(unit_dims)), msg = paste0(sQuote("unit_dims"), " contains NAs"))
+  stopifnot2(all(unit_dims %in% seq_along(dims)), msg = paste0(sQuote("unit_dims"), " has invalid dimensions"))
   stopifnot2(!along_dim %in% unit_dims, msg = paste0(
-    sQuote('along_dim'), ' cannot be inside of ', sQuote('unit_dims')))
+    sQuote("along_dim"), " cannot be inside of ", sQuote("unit_dims")))
   unit_dims <- sort(unit_dims)
 
   UseMethod("baseline_array")
@@ -171,7 +188,7 @@ baseline_array <- function(x, along_dim, unit_dims = seq_along(dim(x))[-along_di
 baseline_array.array <- function(
     x, along_dim, unit_dims = seq_along(dim(x))[-along_dim],
     method = c("percentage", "sqrt_percentage", "decibel", "zscore",
-               "sqrt_zscore", "subtract_mean"),
+               "sqrt_zscore", "db_zscore", "subtract_mean"),
     baseline_indexpoints = NULL, baseline_subarray = NULL, ...) {
 
   along_dim <- as.integer(along_dim)
@@ -179,27 +196,27 @@ baseline_array.array <- function(
   method <- match.arg(method)
   method_int <- which(c(
     "percentage", "sqrt_percentage", "decibel", "zscore", "sqrt_zscore",
-    "subtract_mean") == method)
+    "db_zscore", "subtract_mean") == method)
 
   dims <- dim(x)
   ntimepoints <- dims[along_dim]
 
   stopifnot2(!(is.null(baseline_indexpoints) && is.null(baseline_subarray)),
              msg = "Either `baseline_indexpoints` or `baseline_subarray` must be specified")
-  if(!is.null(baseline_indexpoints)) {
+  if (!is.null(baseline_indexpoints)) {
     baseline_indexpoints <- as.integer(baseline_indexpoints)
     # calculate baseline window
     baseline_indexpoints <- baseline_indexpoints[!is.na(baseline_indexpoints) & baseline_indexpoints > 0 & baseline_indexpoints <= ntimepoints]
     baseline_indexpoints <- sort(baseline_indexpoints)
-    stopifnot2(length(baseline_indexpoints) > 0, msg = paste0('Baseline window is invalid: cannot find any valid time points. \nPlease makesure ', sQuote('baseline_indexpoints'), ' contains at least one integer from 1 to ', ntimepoints))
-    call_args <- lapply(seq_along(dims), function(ii){
-      if(ii == along_dim){
+    stopifnot2(length(baseline_indexpoints) > 0, msg = paste0("Baseline window is invalid: cannot find any valid time points. \nPlease makesure ", sQuote("baseline_indexpoints"), " contains at least one integer from 1 to ", ntimepoints))
+    call_args <- lapply(seq_along(dims), function(ii) {
+      if (ii == along_dim) {
         return(quote(baseline_indexpoints))
       }
       .missing_arg[[1]]
     })
     call_args <- c(list(quote(x)), call_args, list(drop = FALSE))
-    bl <- do.call('[', call_args)
+    bl <- do.call("[", call_args)
     bldims <- dim(bl)
   } else {
     stopifnot2(
@@ -228,7 +245,7 @@ baseline_array.array <- function(
   # re <- .Call(`_ravetools_baselineArray`, x, bl2, dims, bldims2, along_dim - 1L, unit_dims - 1L, rest - 1L, method_int - 1L)
 
   re <- .Call(`_ravetools_baselineArray`, x, bl, dims, bldims, along_dim - 1L, unit_dims - 1L, rest - 1L, method_int - 1L)
-  if(inherits(re, "ravetools_error")){
+  if (inherits(re, "ravetools_error")) {
     stop(re)
   }
   re

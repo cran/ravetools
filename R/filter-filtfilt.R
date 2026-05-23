@@ -7,7 +7,7 @@ filter_initialize <- function(b, a, x) {
   # a <- filter$a
   # x <- sample_signal(500)
 
-  if(a[[1]] != 0) {
+  if (a[[1]] != 0) {
     a <- a / a[[1]]
     b <- b / a[[1]]
   }
@@ -16,7 +16,7 @@ filter_initialize <- function(b, a, x) {
   na <- length(a)
   nb <- length(b)
 
-  if( na > nb ) {
+  if ( na > nb ) {
     b <- c(b, rep(0, na - nb))
     n <- na
   } else {
@@ -27,7 +27,7 @@ filter_initialize <- function(b, a, x) {
   # length of edge transients
   nf <- max(1, 3 * (n - 1))
 
-  if(length(x) <= nf) {
+  if (length(x) <= nf) {
     stop("Cannot apply the filter: the input signal is too short")
   }
 
@@ -35,7 +35,7 @@ filter_initialize <- function(b, a, x) {
   # nf is nfact in matlab filtfilt -> getCoeffsAndInitialConditions
 
   # compute the initial condition if n > 1
-  if( n > 2 ) {
+  if ( n > 2 ) {
     z1 <- diag(1, n - 1) - cbind( -a[-1], rbind(diag(1, n - 2), 0) )
     z2 <- b[-1] - b[1] * a[-1]
     z <- qr.solve(z1, z2, tol = 1e-30)
@@ -93,14 +93,22 @@ filtfilt_naive2 <- function(b, a, y, z, nfact) {
 }
 
 #' @title Forward and reverse filter a one-dimensional signal
+#' 
 #' @description The result has been tested against 'Matlab' \code{filtfilt}
-#' function. Currently this function only supports one filter at a time.
+#'    function. Currently this function only supports one filter at a time.
+#' 
 #' @param b one-dimensional real numerical vector, the moving-average
-#' coefficients of an \code{ARMA} filter
-#' @param a the auto-regressive (recursive) coefficients of an \code{ARMA} filter
-#' @param x numerical vector input (real value)
+#'    coefficients of an \code{ARMA} filter; alternatively, a \code{Sos}
+#'    (second-order sections) object from \code{gsignal}, in which case
+#'    \code{a} is ignored and \code{gsignal::filtfilt} is used internally
+#' 
+#' @param a the auto-regressive (recursive) coefficients of an \code{ARMA}
+#'    filter; ignored when \code{b} is a \code{Sos} object
+#' 
+#' @param x numerical vector or matrix input (real value)
+#' 
 #' @returns The filtered signal, normally the same length as the input signal
-#' \code{x}.
+#'    \code{x}.
 #' @examples
 #'
 #' t <- seq(0, 1, by = 0.01)
@@ -116,7 +124,7 @@ filtfilt_naive2 <- function(b, a, y, z, nfact) {
 #' # res = filtfilt(b, a, x)
 #'
 #' @export
-filtfilt <- function(b, a, x) {
+filtfilt <- function(b, a = 1, x) {
 
   # DIPSAUS DEBUG START
   # filter <- ravetools::butter(5, c(1 / 250, 50 / 250), "pass")
@@ -124,7 +132,24 @@ filtfilt <- function(b, a, x) {
   # a <- filter$a
   # x <- sample_signal(500)
 
-  if(is.matrix(x)) {
+  if (!inherits(b, "Sos") && length(a) > 1 && rcond_filter_ar(a) <= .Machine$double.eps) {
+    # This filter is ARMA filter with unstable AR part, which cannot be applied with the current implementation of filtfilt.
+    # Conversion to SOS form may help if the filter is IIR
+    b <- gsignal::as.Sos(gsignal::Arma(b = b, a = a))
+  }
+
+  # SOS dispatch: b is a Sos object, use gsignal::filtfilt
+  if (inherits(b, "Sos")) {
+    if (is.matrix(x)) {
+      dn <- dimnames(x)
+      out <- apply(x, 2L, function(col) gsignal::filtfilt(b, x = col))
+      dimnames(out) <- dn
+      return(out)
+    }
+    return(gsignal::filtfilt(b, x = x))
+  }
+
+  if (is.matrix(x)) {
     # DIPSAUS DEBUG START
     # b <- rnorm(6)
     # a <- 1
@@ -133,7 +158,7 @@ filtfilt <- function(b, a, x) {
     init <- filter_initialize(b, a, x[, 1])
     nx <- nrow(x)
 
-    if(length(a) == 1) {
+    if (length(a) == 1) {
       # FIR filter
       nfact <- init$nfact
       pad_pre <- sweep(
@@ -167,7 +192,7 @@ filtfilt <- function(b, a, x) {
       return(re)
     } else {
       re <- apply(x, 2L, function(xi) {
-        if(nx < 10000) {
+        if (nx < 10000) {
           filtfilt_naive(b = init$b, a = init$a, y = x, z = init$z, nfact = init$nfact)
         } else {
           filtfilt_naive2(b = init$b, a = init$a, y = x, z = init$z, nfact = init$nfact)
@@ -178,7 +203,7 @@ filtfilt <- function(b, a, x) {
     nx <- length(x)
     init <- filter_initialize(b, a, x)
 
-    if(nx < 10000) {
+    if (nx < 10000) {
       re <- filtfilt_naive(b = init$b, a = init$a, y = x, z = init$z, nfact = init$nfact)
     } else {
       re <- filtfilt_naive2(b = init$b, a = init$a, y = x, z = init$z, nfact = init$nfact)
@@ -248,7 +273,7 @@ filter_signal <- function(b, a, x, z) {
   na <- length(a)
   nb <- length(b)
 
-  if( na > nb ) {
+  if ( na > nb ) {
     b <- c(b, rep(0, na - nb))
     n <- na
   } else {
@@ -256,24 +281,24 @@ filter_signal <- function(b, a, x, z) {
     n <- nb
   }
 
-  if(missing(z)) {
+  if (missing(z)) {
     z <- rep(0.0, n - 1)
   } else {
-    if(length(z) < n-1) {
-      stop(sprintf("`filter`: initial condition `z` must have length >= %d", n-1))
+    if (length(z) < n - 1) {
+      stop(sprintf("`filter`: initial condition `z` must have length >= %d", n - 1))
     }
   }
 
-  if(!is.double(a)) {
+  if (!is.double(a)) {
     a <- as.double(a)
   }
-  if(!is.double(b)) {
+  if (!is.double(b)) {
     b <- as.double(b)
   }
-  if(!is.double(z)) {
+  if (!is.double(z)) {
     z <- as.double(z)
   }
-  if(!is.double(x)) {
+  if (!is.double(x)) {
     x <- as.double(x)
   }
   return(cpp_filter(b, a, x, z))

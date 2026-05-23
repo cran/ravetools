@@ -79,7 +79,7 @@ RcppExport SEXP _ravetools_collapser_cplx(SEXP xSEXP, SEXP keepSEXP, SEXP method
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -116,7 +116,7 @@ RcppExport SEXP _ravetools_collapser_real(SEXP xSEXP, SEXP keepSEXP, SEXP method
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -152,7 +152,7 @@ RcppExport SEXP _ravetools_columnQuantile(SEXP xSEXP, SEXP probSEXP, SEXP naRmSE
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -187,7 +187,7 @@ RcppExport SEXP _ravetools_columnMedian(SEXP xSEXP, SEXP naRmSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -223,7 +223,7 @@ RcppExport SEXP _ravetools_fastColMeans(SEXP xSEXP, SEXP colSEXP, SEXP xDimSEXP)
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -259,7 +259,7 @@ RcppExport SEXP _ravetools_quickQuantile(SEXP xSEXP, SEXP probSEXP, SEXP naRmSEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -294,7 +294,7 @@ RcppExport SEXP _ravetools_quickMedian(SEXP xSEXP, SEXP naRmSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -332,7 +332,7 @@ RcppExport SEXP _ravetools_fastcov(SEXP x1SEXP, SEXP x2SEXP, SEXP col1SEXP, SEXP
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -369,7 +369,7 @@ RcppExport SEXP _ravetools_fftw_r2c(SEXP dataSEXP, SEXP HermConjSEXP, SEXP fftwp
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -406,7 +406,7 @@ RcppExport SEXP _ravetools_fftw_c2c(SEXP dataSEXP, SEXP inverseSEXP, SEXP fftwpl
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -443,28 +443,29 @@ RcppExport SEXP _ravetools_fftw_c2r(SEXP dataSEXP, SEXP HermConjSEXP, SEXP fftwp
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
 // mvfftw_r2c
-SEXP mvfftw_r2c(SEXP data, int fftwplanopt, SEXP ret);
-static SEXP _ravetools_mvfftw_r2c_try(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retSEXP) {
+SEXP mvfftw_r2c(SEXP data, int fftwplanopt, int HermConj, SEXP ret);
+static SEXP _ravetools_mvfftw_r2c_try(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP HermConjSEXP, SEXP retSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
     Rcpp::traits::input_parameter< int >::type fftwplanopt(fftwplanoptSEXP);
+    Rcpp::traits::input_parameter< int >::type HermConj(HermConjSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(mvfftw_r2c(data, fftwplanopt, ret));
+    rcpp_result_gen = Rcpp::wrap(mvfftw_r2c(data, fftwplanopt, HermConj, ret));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _ravetools_mvfftw_r2c(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retSEXP) {
+RcppExport SEXP _ravetools_mvfftw_r2c(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP HermConjSEXP, SEXP retSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_ravetools_mvfftw_r2c_try(dataSEXP, fftwplanoptSEXP, retSEXP));
+        rcpp_result_gen = PROTECT(_ravetools_mvfftw_r2c_try(dataSEXP, fftwplanoptSEXP, HermConjSEXP, retSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -479,29 +480,66 @@ RcppExport SEXP _ravetools_mvfftw_r2c(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// mvfft_c2r
-SEXP mvfft_c2r(SEXP data, int fftwplanopt, int retrows, SEXP ret);
-static SEXP _ravetools_mvfft_c2r_try(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retrowsSEXP, SEXP retSEXP) {
+// mvfftw_c2c
+SEXP mvfftw_c2c(SEXP data, int inverse, int fftwplanopt, SEXP ret);
+static SEXP _ravetools_mvfftw_c2c_try(SEXP dataSEXP, SEXP inverseSEXP, SEXP fftwplanoptSEXP, SEXP retSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type inverse(inverseSEXP);
+    Rcpp::traits::input_parameter< int >::type fftwplanopt(fftwplanoptSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ret(retSEXP);
+    rcpp_result_gen = Rcpp::wrap(mvfftw_c2c(data, inverse, fftwplanopt, ret));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _ravetools_mvfftw_c2c(SEXP dataSEXP, SEXP inverseSEXP, SEXP fftwplanoptSEXP, SEXP retSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_ravetools_mvfftw_c2c_try(dataSEXP, inverseSEXP, fftwplanoptSEXP, retSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// mvfftw_c2r
+SEXP mvfftw_c2r(SEXP data, int fftwplanopt, int retrows, SEXP ret);
+static SEXP _ravetools_mvfftw_c2r_try(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retrowsSEXP, SEXP retSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type data(dataSEXP);
     Rcpp::traits::input_parameter< int >::type fftwplanopt(fftwplanoptSEXP);
     Rcpp::traits::input_parameter< int >::type retrows(retrowsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(mvfft_c2r(data, fftwplanopt, retrows, ret));
+    rcpp_result_gen = Rcpp::wrap(mvfftw_c2r(data, fftwplanopt, retrows, ret));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _ravetools_mvfft_c2r(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retrowsSEXP, SEXP retSEXP) {
+RcppExport SEXP _ravetools_mvfftw_c2r(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP retrowsSEXP, SEXP retSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_ravetools_mvfft_c2r_try(dataSEXP, fftwplanoptSEXP, retrowsSEXP, retSEXP));
+        rcpp_result_gen = PROTECT(_ravetools_mvfftw_c2r_try(dataSEXP, fftwplanoptSEXP, retrowsSEXP, retSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -516,7 +554,7 @@ RcppExport SEXP _ravetools_mvfft_c2r(SEXP dataSEXP, SEXP fftwplanoptSEXP, SEXP r
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -553,7 +591,7 @@ RcppExport SEXP _ravetools_fftw_r2c_2d(SEXP dataSEXP, SEXP HermConjSEXP, SEXP ff
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -590,7 +628,7 @@ RcppExport SEXP _ravetools_fftw_c2c_2d(SEXP dataSEXP, SEXP inverseSEXP, SEXP fft
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -627,7 +665,7 @@ RcppExport SEXP _ravetools_fftw_r2c_3d(SEXP dataSEXP, SEXP HermConjSEXP, SEXP ff
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -664,7 +702,7 @@ RcppExport SEXP _ravetools_fftw_c2c_3d(SEXP dataSEXP, SEXP inverseSEXP, SEXP fft
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -698,7 +736,7 @@ RcppExport SEXP _ravetools_conjugate(SEXP dataSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -735,7 +773,7 @@ RcppExport SEXP _ravetools_cpp_filter(SEXP bSEXP, SEXP aSEXP, SEXP xSEXP, SEXP z
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1210,13 +1248,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // Quaternion__set_from_rotation_matrix
-void Quaternion__set_from_rotation_matrix(SEXP& self, SEXP& m);
-RcppExport SEXP _ravetools_Quaternion__set_from_rotation_matrix(SEXP selfSEXP, SEXP mSEXP) {
+void Quaternion__set_from_rotation_matrix(SEXP& self, SEXP& m, int& fix_qfac);
+RcppExport SEXP _ravetools_Quaternion__set_from_rotation_matrix(SEXP selfSEXP, SEXP mSEXP, SEXP fix_qfacSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP& >::type self(selfSEXP);
     Rcpp::traits::input_parameter< SEXP& >::type m(mSEXP);
-    Quaternion__set_from_rotation_matrix(self, m);
+    Rcpp::traits::input_parameter< int& >::type fix_qfac(fix_qfacSEXP);
+    Quaternion__set_from_rotation_matrix(self, m, fix_qfac);
     return R_NilValue;
 END_RCPP
 }
@@ -1404,7 +1443,7 @@ RcppExport SEXP _ravetools_Vector3__new() {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1440,7 +1479,7 @@ RcppExport SEXP _ravetools_Vector3__from_array(SEXP selfSEXP, SEXP arraySEXP, SE
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1474,7 +1513,7 @@ RcppExport SEXP _ravetools_Vector3__resize(SEXP selfSEXP, SEXP n_elemsSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1508,7 +1547,7 @@ RcppExport SEXP _ravetools_Vector3__get_size(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1544,7 +1583,7 @@ RcppExport SEXP _ravetools_Vector3__to_array(SEXP selfSEXP, SEXP n_skipSEXP, SEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1578,7 +1617,7 @@ RcppExport SEXP _ravetools_Vector3__set_scalar(SEXP selfSEXP, SEXP valueSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1612,7 +1651,7 @@ RcppExport SEXP _ravetools_Vector3__set_x(SEXP selfSEXP, SEXP valueSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1646,7 +1685,7 @@ RcppExport SEXP _ravetools_Vector3__set_y(SEXP selfSEXP, SEXP valueSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1680,7 +1719,7 @@ RcppExport SEXP _ravetools_Vector3__set_z(SEXP selfSEXP, SEXP valueSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1715,7 +1754,7 @@ RcppExport SEXP _ravetools_Vector3__get_x(SEXP selfSEXP, SEXP iSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1750,7 +1789,7 @@ RcppExport SEXP _ravetools_Vector3__get_y(SEXP selfSEXP, SEXP iSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1785,7 +1824,7 @@ RcppExport SEXP _ravetools_Vector3__get_z(SEXP selfSEXP, SEXP iSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1820,7 +1859,7 @@ RcppExport SEXP _ravetools_Vector3__get_item(SEXP selfSEXP, SEXP iSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1854,7 +1893,7 @@ RcppExport SEXP _ravetools_Vector3__copy(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1888,7 +1927,7 @@ RcppExport SEXP _ravetools_Vector3__add(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1922,7 +1961,7 @@ RcppExport SEXP _ravetools_Vector3__add_scalar(SEXP selfSEXP, SEXP sSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1957,7 +1996,7 @@ RcppExport SEXP _ravetools_Vector3__add_vectors(SEXP selfSEXP, SEXP aSEXP, SEXP 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -1992,7 +2031,7 @@ RcppExport SEXP _ravetools_Vector3__add_scaled(SEXP selfSEXP, SEXP vSEXP, SEXP s
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2026,7 +2065,7 @@ RcppExport SEXP _ravetools_Vector3__sub(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2060,7 +2099,7 @@ RcppExport SEXP _ravetools_Vector3__sub_scalar(SEXP selfSEXP, SEXP sSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2095,7 +2134,7 @@ RcppExport SEXP _ravetools_Vector3__sub_vectors(SEXP selfSEXP, SEXP aSEXP, SEXP 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2129,7 +2168,7 @@ RcppExport SEXP _ravetools_Vector3__multiply(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2163,7 +2202,7 @@ RcppExport SEXP _ravetools_Vector3__multiply_scalar(SEXP selfSEXP, SEXP sSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2198,7 +2237,7 @@ RcppExport SEXP _ravetools_Vector3__multiply_vectors(SEXP selfSEXP, SEXP aSEXP, 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2232,7 +2271,7 @@ RcppExport SEXP _ravetools_Vector3__apply_matrix3(SEXP selfSEXP, SEXP mSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2266,7 +2305,7 @@ RcppExport SEXP _ravetools_Vector3__apply_matrix4(SEXP selfSEXP, SEXP mSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2300,7 +2339,7 @@ RcppExport SEXP _ravetools_Vector3__apply_quaternion(SEXP selfSEXP, SEXP qSEXP) 
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2334,7 +2373,7 @@ RcppExport SEXP _ravetools_Vector3__transform_direction(SEXP selfSEXP, SEXP mSEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2368,7 +2407,7 @@ RcppExport SEXP _ravetools_Vector3__divide(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2402,7 +2441,7 @@ RcppExport SEXP _ravetools_Vector3__divide_scalar(SEXP selfSEXP, SEXP sSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2436,7 +2475,7 @@ RcppExport SEXP _ravetools_Vector3__min(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2470,7 +2509,7 @@ RcppExport SEXP _ravetools_Vector3__max(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2505,7 +2544,7 @@ RcppExport SEXP _ravetools_Vector3__clamp(SEXP selfSEXP, SEXP minSEXP, SEXP maxS
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2538,7 +2577,7 @@ RcppExport SEXP _ravetools_Vector3__floor(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2571,7 +2610,7 @@ RcppExport SEXP _ravetools_Vector3__ceil(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2604,7 +2643,7 @@ RcppExport SEXP _ravetools_Vector3__round(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2637,7 +2676,7 @@ RcppExport SEXP _ravetools_Vector3__round_to_zero(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2670,7 +2709,7 @@ RcppExport SEXP _ravetools_Vector3__negate(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2705,7 +2744,7 @@ RcppExport SEXP _ravetools_Vector3__dot(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2739,7 +2778,7 @@ RcppExport SEXP _ravetools_Vector3__length_squared(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2773,7 +2812,7 @@ RcppExport SEXP _ravetools_Vector3__length(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2807,7 +2846,7 @@ RcppExport SEXP _ravetools_Vector3__length_manhattan(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2840,7 +2879,7 @@ RcppExport SEXP _ravetools_Vector3__normalize(SEXP selfSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2874,7 +2913,7 @@ RcppExport SEXP _ravetools_Vector3__set_length(SEXP selfSEXP, SEXP lengthSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2909,7 +2948,7 @@ RcppExport SEXP _ravetools_Vector3__lerp(SEXP selfSEXP, SEXP vSEXP, SEXP alphaSE
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2945,7 +2984,7 @@ RcppExport SEXP _ravetools_Vector3__lerp_vectors(SEXP selfSEXP, SEXP v1SEXP, SEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -2979,7 +3018,7 @@ RcppExport SEXP _ravetools_Vector3__cross(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3014,7 +3053,7 @@ RcppExport SEXP _ravetools_Vector3__cross_vectors(SEXP selfSEXP, SEXP aSEXP, SEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3048,7 +3087,7 @@ RcppExport SEXP _ravetools_Vector3__project_on_vector(SEXP selfSEXP, SEXP vSEXP)
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3082,7 +3121,7 @@ RcppExport SEXP _ravetools_Vector3__project_on_plane(SEXP selfSEXP, SEXP planeNo
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3116,7 +3155,7 @@ RcppExport SEXP _ravetools_Vector3__reflect(SEXP selfSEXP, SEXP normalSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3151,7 +3190,7 @@ RcppExport SEXP _ravetools_Vector3__angle_to(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3186,7 +3225,7 @@ RcppExport SEXP _ravetools_Vector3__distance_to(SEXP selfSEXP, SEXP vSEXP) {
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3221,7 +3260,7 @@ RcppExport SEXP _ravetools_Vector3__distance_to_squared(SEXP selfSEXP, SEXP vSEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3256,7 +3295,7 @@ RcppExport SEXP _ravetools_Vector3__distance_to_manhattan(SEXP selfSEXP, SEXP vS
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3292,7 +3331,7 @@ RcppExport SEXP _ravetools_Vector3__set_from_spherical_coords(SEXP selfSEXP, SEX
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3326,7 +3365,7 @@ RcppExport SEXP _ravetools_Vector3__set_from_matrix_position(SEXP selfSEXP, SEXP
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3360,7 +3399,7 @@ RcppExport SEXP _ravetools_Vector3__set_from_matrix_scale(SEXP selfSEXP, SEXP mS
     if (rcpp_isError_gen) {
         SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
         UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+        (Rf_error)("%s", CHAR(rcpp_msgSEXP_gen));
     }
     UNPROTECT(1);
     return rcpp_result_gen;
@@ -3695,8 +3734,9 @@ static int _ravetools_RcppExport_validate(const char* sig) {
         signatures.insert("SEXP(*fftw_r2c)(SEXP,int,int,SEXP)");
         signatures.insert("SEXP(*fftw_c2c)(SEXP,int,int,SEXP)");
         signatures.insert("SEXP(*fftw_c2r)(SEXP,int,int,SEXP)");
-        signatures.insert("SEXP(*mvfftw_r2c)(SEXP,int,SEXP)");
-        signatures.insert("SEXP(*mvfft_c2r)(SEXP,int,int,SEXP)");
+        signatures.insert("SEXP(*mvfftw_r2c)(SEXP,int,int,SEXP)");
+        signatures.insert("SEXP(*mvfftw_c2c)(SEXP,int,int,SEXP)");
+        signatures.insert("SEXP(*mvfftw_c2r)(SEXP,int,int,SEXP)");
         signatures.insert("SEXP(*fftw_r2c_2d)(SEXP,int,int,SEXP)");
         signatures.insert("SEXP(*fftw_c2c_2d)(SEXP,int,int,SEXP)");
         signatures.insert("SEXP(*fftw_r2c_3d)(SEXP,int,int,SEXP)");
@@ -3779,7 +3819,8 @@ RcppExport SEXP _ravetools_RcppExport_registerCCallable() {
     R_RegisterCCallable("ravetools", "_ravetools_fftw_c2c", (DL_FUNC)_ravetools_fftw_c2c_try);
     R_RegisterCCallable("ravetools", "_ravetools_fftw_c2r", (DL_FUNC)_ravetools_fftw_c2r_try);
     R_RegisterCCallable("ravetools", "_ravetools_mvfftw_r2c", (DL_FUNC)_ravetools_mvfftw_r2c_try);
-    R_RegisterCCallable("ravetools", "_ravetools_mvfft_c2r", (DL_FUNC)_ravetools_mvfft_c2r_try);
+    R_RegisterCCallable("ravetools", "_ravetools_mvfftw_c2c", (DL_FUNC)_ravetools_mvfftw_c2c_try);
+    R_RegisterCCallable("ravetools", "_ravetools_mvfftw_c2r", (DL_FUNC)_ravetools_mvfftw_c2r_try);
     R_RegisterCCallable("ravetools", "_ravetools_fftw_r2c_2d", (DL_FUNC)_ravetools_fftw_r2c_2d_try);
     R_RegisterCCallable("ravetools", "_ravetools_fftw_c2c_2d", (DL_FUNC)_ravetools_fftw_c2c_2d_try);
     R_RegisterCCallable("ravetools", "_ravetools_fftw_r2c_3d", (DL_FUNC)_ravetools_fftw_r2c_3d_try);
@@ -3862,8 +3903,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_fftw_r2c", (DL_FUNC) &_ravetools_fftw_r2c, 4},
     {"_ravetools_fftw_c2c", (DL_FUNC) &_ravetools_fftw_c2c, 4},
     {"_ravetools_fftw_c2r", (DL_FUNC) &_ravetools_fftw_c2r, 4},
-    {"_ravetools_mvfftw_r2c", (DL_FUNC) &_ravetools_mvfftw_r2c, 3},
-    {"_ravetools_mvfft_c2r", (DL_FUNC) &_ravetools_mvfft_c2r, 4},
+    {"_ravetools_mvfftw_r2c", (DL_FUNC) &_ravetools_mvfftw_r2c, 4},
+    {"_ravetools_mvfftw_c2c", (DL_FUNC) &_ravetools_mvfftw_c2c, 4},
+    {"_ravetools_mvfftw_c2r", (DL_FUNC) &_ravetools_mvfftw_c2r, 4},
     {"_ravetools_fftw_r2c_2d", (DL_FUNC) &_ravetools_fftw_r2c_2d, 4},
     {"_ravetools_fftw_c2c_2d", (DL_FUNC) &_ravetools_fftw_c2c_2d, 4},
     {"_ravetools_fftw_r2c_3d", (DL_FUNC) &_ravetools_fftw_r2c_3d, 4},
@@ -3910,7 +3952,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_Quaternion__getW", (DL_FUNC) &_ravetools_Quaternion__getW, 1},
     {"_ravetools_Quaternion__setW", (DL_FUNC) &_ravetools_Quaternion__setW, 2},
     {"_ravetools_Quaternion__set_from_axis_angle", (DL_FUNC) &_ravetools_Quaternion__set_from_axis_angle, 3},
-    {"_ravetools_Quaternion__set_from_rotation_matrix", (DL_FUNC) &_ravetools_Quaternion__set_from_rotation_matrix, 2},
+    {"_ravetools_Quaternion__set_from_rotation_matrix", (DL_FUNC) &_ravetools_Quaternion__set_from_rotation_matrix, 3},
     {"_ravetools_Quaternion__set_from_unit_vectors", (DL_FUNC) &_ravetools_Quaternion__set_from_unit_vectors, 3},
     {"_ravetools_Quaternion__angle_to", (DL_FUNC) &_ravetools_Quaternion__angle_to, 2},
     {"_ravetools_Quaternion__rotate_towards", (DL_FUNC) &_ravetools_Quaternion__rotate_towards, 3},
