@@ -95,10 +95,17 @@ freqz2 <- function(b, a = 1, fs = 2 * pi, n = 512, whole = FALSE, ...) {
 
   cutoffs <- cutoffs[!vapply(cutoffs, is.null, FALSE)]
 
-  structure(list(name = nm, unit = object$u,
-                 frequency_range = rw, phase_range = rp,
-                 peak = peak, cutoffs = cutoffs),
-            class = c("summary.ravetools-freqz2", "ravetools-printable", "list"))
+  structure(
+    list(
+      name = nm,
+      unit = object$u,
+      frequency_range = rw,
+      phase_range = rp,
+      peak = peak,
+      cutoffs = cutoffs
+    ),
+    class = c("summary.ravetools-freqz2", "ravetools-printable", "list")
+  )
 }
 
 #' @export
@@ -211,9 +218,10 @@ freqz2 <- function(b, a = 1, fs = 2 * pi, n = 512, whole = FALSE, ...) {
   }
 
   if (length(smry$cutoffs)) {
-    legend_text <- c(legend_text, sprintf("Cutoff %.2f %s", cutoffs, x$u))
-    legend_col <- c(legend_col, color_palette[seq_along(cutoffs)])
-    legend_lty <- c(legend_lty, rep(2, length(cutoffs)))
+    cutoffs_drawn <- vapply(smry$cutoffs, `[[`, 0, "cutoff")
+    legend_text <- c(legend_text, sprintf("Cutoff %.2f dB", cutoffs_drawn))
+    legend_col <- c(legend_col, color_palette[seq_along(cutoffs_drawn)])
+    legend_lty <- c(legend_lty, rep(2, length(cutoffs_drawn)))
     has_legend <- TRUE
   } else {
     has_legend <- FALSE
