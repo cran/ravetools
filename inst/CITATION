@@ -9,10 +9,43 @@ bibentry(bibtype = "Article",
          volume       = "223",
          pages        = "117341",
          doi          = "10.1016/j.neuroimage.2020.117341",
-         header       = "To cite ravetools in publications use, please cite the RAVE paper from Beauchamp's lab.",
+         header       = "This package is part of RAVE. To cite this package in publications use, please check the following Neuroimage paper from Beauchamp's lab.",
          footer       = "Please check https://rave.wiki for more information.",
          textVersion  = "Magnotti, JF, and Wang, Z, and Beauchamp, MS. RAVE: comprehensive open-source software for reproducible analysis and visualization of intracranial EEG data. NeuroImage, 223, p.117341."
 )
+
+
+bibentry(bibtype = "Article",
+         title        = "Symmetric diffeomorphic image registration with cross-correlation: evaluating automated labeling of elderly and neurodegenerative brain",
+         author       = c(as.person("Brian B. Avants"),
+                          as.person("Charles L. Epstein"),
+                          as.person("Murray Grossman"),
+                          as.person("James C. Gee")),
+         journal      = "Medical image analysis",
+         year         = "2008",
+         volume       = "12",
+         pages        = "26-41",
+         number       = "1",
+         doi          = "10.1016/j.media.2007.06.004",
+         header       = "If you use `register_volume3d` for imaging registration, please cite the following paper.",
+         textVersion  = "Avants BB, Epstein CL, Grossman M, Gee JC (2008). Symmetric diffeomorphic image registration with cross-correlation: evaluating automated labeling of elderly and neurodegenerative brain. Medical image analysis, 12(1), 26-41."
+)
+
+bibentry(bibtype = "Article",
+         title        = "Cortical surface-based analysis: II: inflation, flattening, and a surface-based coordinate system",
+         author       = c(as.person("Bruce Fischl"),
+                          as.person("Martin I. Sereno"),
+                          as.person("Anders M. Dale")),
+         journal      = "Neuroimage",
+         year         = "1999",
+         volume       = "9",
+         number       = "2",
+         pages        = "195-207",
+         doi          = "10.1006/nimg.1998.0396",
+         header       = "If you use the mris_*() functions for surface manipulation, please also cite:",
+         textVersion  = "Fischl B, Sereno MI, Dale AM (1999). Cortical surface-based analysis: II: inflation, flattening, and a surface-based coordinate system. Neuroimage, 9(2), 195-207. doi:10.1006/nimg.1998.0396."
+)
+
 
 bibentry(bibtype = "Article",
          title        = "{CARLA}: Adjusted common average referencing for cortico-cortical evoked potential data",
@@ -73,4 +106,19 @@ bibentry(bibtype = "Article",
          doi          = "10.1371/journal.pcbi.1011105",
          header       = "If you use the crp() function, please also cite the original CRP manuscript:",
          textVersion  = "Miller KJ, Mueller K-R, Ojeda Valencia G, Huang H, Gregg NM, Worrell GA, Hermes D (2023). Canonical response parameterization: Quantifying the structure of responses to single-pulse intracranial electrical brain stimulation. PLOS Computational Biology, 19(5), e1011105. doi:10.1371/journal.pcbi.1011105."
+)
+
+bibentry(bibtype = "Article",
+         title        = "Basis profile curve identification to understand electrical stimulation effects in human brain networks",
+         author       = c(as.person("Kai J. Miller"),
+                          as.person("Klaus-Robert Mueller"),
+                          as.person("Dora Hermes")),
+         journal      = "PLOS Computational Biology",
+         year         = "2021",
+         volume       = "17",
+         number       = "9",
+         pages        = "e1008710",
+         doi          = "10.1371/journal.pcbi.1008710",
+         header       = "If you use the bpc() function, please also cite the original BPC manuscript:",
+         textVersion  = "Miller KJ, Mueller K-R, Hermes D (2021). Basis profile curve identification to understand electrical stimulation effects in human brain networks. PLOS Computational Biology, 17(9), e1008710. doi:10.1371/journal.pcbi.1008710."
 )

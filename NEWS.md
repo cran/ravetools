@@ -1,3 +1,31 @@
+# ravetools 0.3.0
+
+* Added `vcg_detect_collision` to detect exact collisions and proximity within a distance tolerance between two geometries, where each side may be a point cloud, a chain of connected line segments (such as diffusion streamlines, delimited by `NA` rows), or a triangular mesh; optionally counts geometry enclosed by a closed surface
+* Added `color_ramp_continuous` helper to create a vectorized color-mapping function from a palette and a numeric domain
+* Fixed `make_error` to properly protect the error class string from garbage collection, preventing class names from being silently lost in nested error calls
+* Guarded `design_filter` against `bandstop` configurations where automatically derived transition bandwidths overlap each other, producing unordered frequency breakpoints
+* Added `mris_curvature` to estimate per-vertex mean, Gaussian, and principal curvatures by fitting an osculating quadratic surface to each vertex's two-ring neighborhood
+* Added `mris_smooth` to smooth a triangular surface mesh via iterative `Laplacian` or `Taubin` smoothing
+* Added `mris_inflate` to inflate a cortical surface mesh by iteratively smoothing and expanding toward a sphere while preserving total surface area
+* Added `mris_sphere` to project an inflated cortical surface onto a sphere and relax metric distortion via area-preserving gradient descent
+* Added `mris_remesh` to re-mesh a triangular surface to uniform edge length using the `Botsch` and `Kobbelt` (2004) isotropic re-meshing algorithm
+* Added `mris_make_surfaces` to localize white-matter and `pial` surfaces from an intensity volume
+* Added `vcg_average_edge_length` and `vcg_max_edge_length` to query edge-length statistics of a mesh
+* Added `vcg_count_edge_defects` to count non-manifold edge defects in a mesh
+* Added `vcg_fix_defects` to repair mesh topology defects via `VCG`
+* Added `vcg_subdivide_max_edge_length` to subdivide only edges that exceed a specified length, avoiding global super-sampling and improving `Dijkstra` path quality
+* Added `vcg_mesh_patch` to extract a geodesic patch of a mesh bounded by a closed curve of user-supplied `waypoint` vertices
+* All `mesh3d` objects returned by `ravetools` now carry the `ravetools_mesh3d` class, enabling a `plot()` generic that dispatches automatically to `plot_mesh_polygon` or `plot_mesh_dotcloud`
+* `register_volume3d` (`SyN` mode) re-implemented from the `ANTs` paper in pure `Rcpp`/`RcppEigen`; no longer depends on `RNiftyReg` or any external registration library
+* `register_volume3d` gains a `points` argument to additionally warp a matrix of anatomical coordinates (e.g. cortical surface vertices) through the estimated transform, enabling direct cortical mapping without a separate resampling step
+* Exported `apply_transform3d` to apply a previously estimated rigid, `affine`, or `SyN` transform to a new 3D volume
+* `register_volume3d` now returns an object of class `ravetools_register_volume3d` (carrying the grid geometry and a `vox2ras` attribute on each deformation field) with a `print` method
+* Added `write_ants_transform`/`read_ants_transform` to read and write the linear transform as an `ITK` `affine` `.mat` file (a `MATLAB` level-4 binary in `LPS` convention) compatible with `antsApplyTransforms`; implemented in base R with no new dependency
+* Added `write_ants_warp`/`read_ants_warp` to read and write the deformation field as an `ANTs` 5-D warp `NIfTI` (`LPS` displacement vectors, vector intent code) via the suggested `freesurferformats` package; the `RAS` `affine` can optionally be hidden in the header text fields for single-file recovery
+* Added `ras_lps_conjugate` to convert a 4x4 transform between the `RAS` and `LPS` conventions
+* Added `save_registration`/`load_registration` to write a registration result to (or read it from) `ANTs`-style files plus a dependency-free manifest
+
+
 # ravetools 0.2.6
 
 * Added `plot_mesh_dotcloud` for rendering one or more `mesh3d` objects as an orthographic rim-lit dot cloud in base R (no `rgl` dependency); supports per-vertex colors, depth-gradient palettes, per-mesh alpha, `side` filtering, and painter's-algorithm depth sorting across multiple meshes
@@ -16,7 +44,7 @@
 * `project_plane` gains an `n_iters` argument to control the number of projection iterations (default is `5`)
 * Applied lint fixes and improved code style consistency across all source files
 * Added `carla` implementing the Common Average Re-referencing by Least Anti-Correlation (`CARLA`) algorithm (see `CITATION`) for selecting an optimal subset of channels as the common average reference in `CCEP` data
-* Added `crp` implementing the Canonical Response Parameterization (`CRP`) method for characterizing single-trial evoked responses (e.g. `CCEP`s): estimates response duration, extracts the canonical response shape, and reports per-trial weights, `SNR`, and explained variance
+* Added `crp` implementing the Canonical Response Parameterization (`CRP`) method for characterizing single-trial evoked responses (e.g. `CCEP`s): estimates response duration, extracts the canonical response shape, and reports per-trial weights, `SNR`, and explained variance; additionally reports a canonical shape (`C_full`) spanning the entire loaded time range (including the baseline period), and gains an optional reverse-scan response-onset estimator (`detect_onset`, with an `onset_search_start` floor) that locates the response start time for delayed responses - even before the analysis window - while keeping the per-trial weights unchanged; non-finite time points are dropped automatically and the analysis window is clamped into the available time range
 * Exposed low-level `FFTW3` wrappers (`fftw_r2c`, `fftw_c2r`, `fftw_c2c`, `mvfftw_r2c`, `mvfftw_c2c`, `mvfftw_c2r`, and their `2D`/`3D` variants) with memory bugs fixed; these are thin bindings for advanced users requiring maximum throughput
 * Fixed `design_filter_fir` band-pass scaling reference frequency to use the average of the transition-band midpoints (matching `MATLAB` `fir1`/`scale_filter`), and fixed band-stop scaling to always normalize at `DC`; previously both could produce incorrect gain for asymmetric transition bands
 * `filtfilt` now accepts a `Sos` (second-order sections) object from `gsignal` and delegates to `gsignal::filtfilt` in that case

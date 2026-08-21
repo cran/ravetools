@@ -5,7 +5,7 @@ fir_gain <- function(b, f0) {
   Mod(sum(exp(-1i * 2 * pi * seq(0, L - 1) * (f0 / 2)) * b))
 }
 
-# ── Unity-gain tests (self-contained, no MATLAB needed) ──────────────────────
+# -- Unity-gain tests (self-contained, no MATLAB needed) ----------------------
 
 test_that("fir1: scale=TRUE produces unity gain at the correct reference frequency", {
 
@@ -33,14 +33,14 @@ test_that("fir1: scale=TRUE produces unity gain at the correct reference frequen
 })
 
 
-test_that("design_filter_fir: scale=TRUE produces unity gain at reference frequency (all methods × all types)", {
+test_that("design_filter_fir: scale=TRUE produces unity gain at reference frequency (all methods x all types)", {
 
   fs   <- 1000
   nyq  <- fs / 2
 
   for (method in c("kaiser", "firls", "remez")) {
 
-    # ── Low-pass: reference = DC (f0 = 0) ────────────────────────────────
+    # -- Low-pass: reference = DC (f0 = 0) --------------------------------
     f <- design_filter_fir(
       sample_rate = fs, low_pass_freq = 100,
       filter_order = 60, scale = TRUE, method = method
@@ -50,7 +50,7 @@ test_that("design_filter_fir: scale=TRUE produces unity gain at reference freque
       label = sprintf("low-pass %s DC gain", method)
     )
 
-    # ── High-pass: reference = Nyquist (f0 = 1) ──────────────────────────
+    # -- High-pass: reference = Nyquist (f0 = 1) --------------------------
     f <- design_filter_fir(
       sample_rate = fs, high_pass_freq = 200,
       filter_order = 60, scale = TRUE, method = method
@@ -60,7 +60,7 @@ test_that("design_filter_fir: scale=TRUE produces unity gain at reference freque
       label = sprintf("high-pass %s Nyquist gain", method)
     )
 
-    # ── Band-pass: reference = mean(kaisprm$Wc) = mean of transition-band midpoints ────
+    # -- Band-pass: reference = mean(kaisprm$Wc) = mean of transition-band midpoints ----
     # high_pass_freq=100 <= low_pass_freq=300 -> ftype="pass"
     f <- design_filter_fir(
       sample_rate = fs, high_pass_freq = 100, low_pass_freq = 300,
@@ -74,7 +74,7 @@ test_that("design_filter_fir: scale=TRUE produces unity gain at reference freque
       label = sprintf("band-pass %s transition-midpoint gain", method)
     )
 
-    # ── Band-stop: reference = DC (f0 = 0) for both low- and high-freq notch ──
+    # -- Band-stop: reference = DC (f0 = 0) for both low- and high-freq notch --
     # MATLAB fir1 always scales band-stop at DC (fband=TRUE -> b/sum(b))
     f_lo <- design_filter_fir(
       sample_rate = fs,
@@ -112,13 +112,13 @@ test_that("design_filter_fir: scale=FALSE does not normalise", {
 })
 
 
-# ── MATLAB coefficient comparison ────────────────────────────────────────────
+# -- MATLAB coefficient comparison --------------------------------------------
 #
 # Run the block below in MATLAB, paste the printed vectors back here, then
 # remove the skip() calls.
 #
 # MATLAB code (paste into MATLAB command window or script):
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 #   % fir1 defaults: Hamming window + scale=true, identical to ravetools defaults
 #   b_low  = fir1(20, 0.3);
 #   b_high = fir1(20, 0.3, 'high');
@@ -129,7 +129,7 @@ test_that("design_filter_fir: scale=FALSE does not normalise", {
 #   fprintf('b_high <- c('); fprintf('%.15g, ', b_high); fprintf(')\n');
 #   fprintf('b_pass <- c('); fprintf('%.15g, ', b_pass); fprintf(')\n');
 #   fprintf('b_stop <- c('); fprintf('%.15g, ', b_stop); fprintf(')\n');
-# ──────────────────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
 
 test_that("fir1 low-pass matches MATLAB (hamming window, scale=TRUE)", {
   b_matlab <- c(
@@ -195,7 +195,7 @@ test_that("fir1 band-stop matches MATLAB (hamming window, scale=TRUE)", {
 })
 
 
-# ── MATLAB comparison for design_filter_fir (kaiser method) ──────────────────
+# -- MATLAB comparison for design_filter_fir (kaiser method) ------------------
 #
 # The kaiser method calls fir1 with cutoffs = kaisprm$Wc and
 # window = kaiser(n+1, beta).  Extract these from R, then verify in MATLAB.
@@ -239,4 +239,65 @@ test_that("design_filter_fir kaiser low-pass matches MATLAB fir1", {
   )
   # Loose tolerance: Wc/beta were entered in MATLAB with only ~7 significant figures
   expect_equal(f$b, b_matlab, tolerance = 1e-4)
+})
+
+# -- Narrow band-stop (notch narrower than the auto transition heuristic) -----
+
+test_that("design_filter_fir: narrow band-stop with auto transitions succeeds", {
+  # Notch is only 1 Hz wide (24-25 Hz) at sr=2000.  With data_size=NA the
+  # auto suggested_trans_bandwidth is 0.01 (normalized) = 10 Hz, which is
+  # 10x the notch.  The function must silently cap it rather than error.
+  # Note: "remez" requires non-degenerate (non-zero-width) stop bands in its
+  # internal grid and errors on near-zero transitions; that is a separate
+  # gsignal constraint unrelated to this fix.
+  for (method in c("kaiser", "firls")) {
+    f <- design_filter_fir(
+      sample_rate = 2000,
+      high_pass_freq = 25, low_pass_freq = 24,
+      filter_order = 200, method = method
+    )
+    expect_true(inherits(f, "ravetools-design_filter_fir"),
+                label = sprintf("narrow notch returns filter (%s)", method))
+    # Band-stop filters normalise at DC (f0 = 0)
+    expect_equal(
+      fir_gain(f$b, 0), 1.0, tolerance = 1e-6,
+      label = sprintf("narrow notch DC gain = 1 (%s)", method)
+    )
+  }
+})
+
+test_that("design_filter_fir: narrow notch with one explicit transition succeeds", {
+  # low_pass_trans_freq explicitly set to 0.3 Hz (< notch width 1 Hz);
+  # high_pass_trans_freq is NA and will be capped to the remaining room.
+  f <- design_filter_fir(
+    sample_rate = 2000,
+    high_pass_freq = 25, low_pass_freq = 24,
+    low_pass_trans_freq = 0.3,
+    filter_order = 200
+  )
+  expect_true(inherits(f, "ravetools-design_filter_fir"))
+  expect_equal(fir_gain(f$b, 0), 1.0, tolerance = 1e-6)
+})
+
+test_that("design_filter_fir: user-supplied transitions that overlap throw an error", {
+  # Combined explicit transition (1 + 1 = 2 Hz) exceeds 1 Hz notch -> error.
+  expect_error(
+    design_filter_fir(
+      sample_rate = 2000,
+      high_pass_freq = 25, low_pass_freq = 24,
+      low_pass_trans_freq = 1, high_pass_trans_freq = 1,
+      filter_order = 200
+    ),
+    regexp = "transition bandwidths overlap"
+  )
+  # A single explicit transition (1.5 Hz) that alone exceeds the notch -> error.
+  expect_error(
+    design_filter_fir(
+      sample_rate = 2000,
+      high_pass_freq = 25, low_pass_freq = 24,
+      low_pass_trans_freq = 1.5,
+      filter_order = 200
+    ),
+    regexp = "transition bandwidths overlap"
+  )
 })

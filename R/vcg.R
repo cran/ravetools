@@ -75,6 +75,29 @@ pcax <- function(mesh) {
   return(pc)
 }
 
+# Coerce a point-cloud-ish input (n x 2 or n x 3 matrix, or any surface that
+# `meshintegrity` accepts) into the 3 x n layout the vcg wrappers pass down to
+# C++. `NA` rows are carried through untouched: `vcg_detect_collision` uses
+# them as polyline separators.
+as_point_cloud_matrix <- function(x, caller) {
+  if (is.matrix(x) || is.array(x)) {
+    x <- x[drop = FALSE]
+    stopifnot2(
+      is.matrix(x) && ncol(x) %in% c(2, 3),
+      msg = sprintf("`%s`: input must be a column-matrix with 2 or 3 columns and `n` rows as number of points.", caller)
+    )
+    if (ncol(x) == 2) {
+      x <- cbind(x, 0)
+    }
+    x <- t(x)
+  } else {
+    x <- meshintegrity(mesh = x, facecheck = FALSE)
+    x <- x$vb[1:3, , drop = FALSE]
+  }
+  storage.mode(x) <- "double"
+  x
+}
+
 meshOff <- function(x, offset) {
   x <- vcg_update_normals(x)
   x$vb[1:3, ] <- x$vb[1:3, ] + offset * x$normals[1:3, ]
@@ -168,7 +191,7 @@ vcg_update_normals <- function(
     tmp <- list()
     tmp$vb <- rbind(t(mesh), 1)
     mesh <- tmp
-    class(mesh) <- "mesh3d"
+    class(mesh) <- c("ravetools_mesh3d", "mesh3d")
   }
   mesh <- meshintegrity(mesh)
   vb <- mesh$vb[1:3, , drop = FALSE]
@@ -209,7 +232,7 @@ vcg_barycentric_subdivision <- function(mesh) {
   mesh$it[3, ] <- vb_faces
 
   structure(
-    class = "mesh3d",
+    class = c("ravetools_mesh3d", "mesh3d"),
     list(
       vb = cbind(mesh$vb[1:3, , drop = FALSE], vb, deparse.level = 0),
       it = cbind(mesh$it[1:3, , drop = FALSE], f1, f2, deparse.level = 0)
@@ -445,6 +468,256 @@ vcg_mesh_volume <- function(mesh) {
   vcgVolume( meshintegrity(mesh) )
 }
 
+#' @title Count boundary and non-manifold edges of a triangular mesh
+#' @description
+#' Detects topology defects that prevent a mesh from being a closed,
+#' manifold, genus-0 surface, a hard precondition of algorithms such as
+#' \code{\link{mris_inflate}}.  An edge is a \emph{boundary} edge when it is
+#' referenced by exactly one face (i.e. it bounds a hole), and
+#' \emph{non-manifold} when it is referenced by more than two faces.
+#' @param mesh triangular mesh of class \code{'mesh3d'}.
+#' @returns A named list with elements \code{boundary_edges} (number of
+#' boundary edges), \code{nonmanifold_edges} (number of non-manifold edges),
+#' and \code{is_closed_manifold} (\code{TRUE} when both counts are zero,
+#' i.e. the mesh is closed and manifold and ready for
+#' \code{\link{mris_inflate}}).
+#'
+#' @examples
+#' if (is_not_cran()) {
+#'
+#'   sphere <- vcg_sphere()
+#'   vcg_count_edge_defects(sphere)
+#'
+#'   defective <- vcg_isosurface(left_hippocampus_mask)
+#'   vcg_count_edge_defects(defective)
+#'
+#' }
+#'
+#' @export
+vcg_count_edge_defects <- function(mesh) {
+  mesh <- meshintegrity(mesh, facecheck = TRUE)
+
+  vb <- mesh$vb[1:3, , drop = FALSE]
+  storage.mode(vb) <- "double"
+
+  it <- mesh$it - 1L
+  storage.mode(it) <- "integer"
+
+  vcgCountEdgeDefects(vb_ = vb, it_ = it)
+}
+
+#' @title Compute the average edge length of a triangular mesh
+#' @description
+#' Computes the average length of all face edges (each edge is counted once
+#' per incident face, so edges shared by two faces are counted twice).  Useful
+#' as a scale-aware reference length, e.g. to derive a vertex-merge tolerance
+#' such as the one used internally by \code{\link{vcg_fix_defects}}.
+#' @param mesh triangular mesh of class \code{'mesh3d'}.
+#' @returns A single numeric value: the average edge length, in mesh units.
+#'
+#' @examples
+#' if (is_not_cran()) {
+#'
+#'   sphere <- vcg_sphere()
+#'   vcg_average_edge_length(sphere)
+#'
+#' }
+#'
+#' @export
+vcg_average_edge_length <- function(mesh) {
+  mesh <- meshintegrity(mesh, facecheck = TRUE)
+
+  vb <- mesh$vb[1:3, , drop = FALSE]
+  storage.mode(vb) <- "double"
+
+  it <- mesh$it - 1L
+  storage.mode(it) <- "integer"
+
+  vcgAverageEdgeLength(vb_ = vb, it_ = it)
+}
+
+#' @title Maximum edge length of a triangular mesh
+#' @description Returns the length of the longest edge in the mesh.
+#' @param mesh triangular mesh of class \code{'mesh3d'}.
+#' @returns A single numeric value: the maximum edge length, in mesh units.
+#' @seealso \code{\link{vcg_average_edge_length}},
+#'   \code{\link{vcg_subdivide_max_edge_length}}
+#'
+#' @examples
+#' if (is_not_cran()) {
+#'
+#'   sphere <- vcg_sphere()
+#'   vcg_max_edge_length(sphere)
+#'
+#' }
+#'
+#' @export
+vcg_max_edge_length <- function(mesh) {
+  mesh <- meshintegrity(mesh, facecheck = TRUE)
+  vb <- mesh$vb[1:3, , drop = FALSE]
+  storage.mode(vb) <- "double"
+  it <- mesh$it - 1L
+  storage.mode(it) <- "integer"
+  vcgMaxEdgeLength(vb_ = vb, it_ = it)
+}
+
+#' @title Selectively subdivide mesh edges that exceed a length threshold
+#' @description
+#' Up-sample a triangular mesh by iteratively splitting only edges longer than
+#' \code{max_edge_len}. Each long edge is split at its midpoint; the new vertex
+#' is connected to the opposite corner of every adjacent face. Iteration stops
+#' when no edge exceeds the threshold or \code{max_iter} passes are exhausted.
+#'
+#' This is far cheaper than \code{\link{vcg_subdivision}} when most edges are
+#' already short and only a small fraction need splitting.
+#'
+#' @param mesh triangular mesh of class \code{'mesh3d'}.
+#' @param max_edge_len maximum allowed edge length (same units as mesh
+#'   coordinates).
+#' @param max_iter maximum number of refinement passes. When \code{NULL}
+#'   (default), derived automatically from the current maximum edge length:
+#'   \code{ceiling(log2(current_max / max_edge_len)) + 1L}, the minimum number
+#'   of bisections needed in the worst case. The loop also terminates early once
+#'   no edge exceeds the threshold.
+#' @returns An object of class \code{"mesh3d"} with all edges at most
+#'   \code{max_edge_len} long (provided \code{max_iter} was sufficient).
+#' @note The mesh must be manifold. Run \code{\link{vcg_fix_defects}} first if
+#'   the mesh has boundary edges or non-manifold vertices.
+#' @seealso \code{\link{vcg_max_edge_length}}, \code{\link{vcg_subdivision}}
+#'
+#' @inheritSection ensure_mesh3d Coercing Surface Inputs
+#'
+#' @examples
+#' if (is_not_cran()) {
+#'
+#'   sphere <- vcg_sphere()
+#'   cur_max <- vcg_max_edge_length(sphere)
+#'   sphere2 <- vcg_subdivide_max_edge_length(sphere, max_edge_len = cur_max * 0.4)
+#'   vcg_max_edge_length(sphere2)  # should be <= cur_max * 0.4
+#'
+#' }
+#'
+#' @export
+vcg_subdivide_max_edge_length <- function(mesh, max_edge_len, max_iter = NULL) {
+  mesh <- meshintegrity(mesh = mesh, facecheck = TRUE)
+  vb <- mesh$vb[1:3, , drop = FALSE]
+  storage.mode(vb) <- "double"
+  it <- mesh$it - 1L
+  storage.mode(it) <- "integer"
+  max_edge_len <- as.double(max_edge_len)
+  if (is.null(max_iter)) {
+    cur_max <- vcgMaxEdgeLength(vb_ = vb, it_ = it)
+    if (cur_max <= max_edge_len) {
+      return(mesh)
+    }
+    max_iter <- ceiling(log2(cur_max / max_edge_len)) + 1L
+  }
+  max_iter <- as.integer(max_iter)
+  vcgEdgeLengthSubdivision(vb, it, max_edge_len, max_iter)
+}
+
+#' @title Detect and repair defects in a triangular surface mesh
+#' @description
+#' Repairs common defects that prevent a mesh from being a closed, manifold,
+#' genus-0 surface - a hard precondition of algorithms such as
+#' \code{\link{mris_inflate}}.  Typical sources of such defects are surfaces
+#' extracted from volumes via marching-cubes-style algorithms (e.g.
+#' \code{\link{vcg_isosurface}}), which can leave behind small "cracks": isolated
+#' boundary-edge loops bounding tiny holes that are not closed by simple
+#' vertex-welding.
+#'
+#' @details
+#' The repair pipeline applies, in order:
+#' \enumerate{
+#'   \item Remove degenerate and duplicate faces.
+#'   \item Weld near-coincident vertices (closes cracks caused by duplicated
+#'     vertices), using \code{merge_tolerance} or, by default, a distance
+#'     derived from the mesh's average edge length.
+#'   \item Triangulate ("ear-cut fill") any remaining small boundary loops --
+#'     i.e. \emph{isolated edges} / genuine small holes that welding alone
+#'     cannot close, up to \code{max_hole_size} edges.
+#'   \item Remove unreferenced vertices.
+#'   \item Re-orient all faces coherently (consistent winding order), and, if
+#'     the result is a single watertight component, flip normals to point
+#'     outward (this last step assumes the geometry is meant to be watertight).
+#' }
+#'
+#' @param mesh triangular mesh of class \code{'mesh3d'}.
+#' @param merge_tolerance distance (in mesh units) below which vertices are
+#' welded together; default is \code{NA}, in which case the tolerance is
+#' derived automatically as \code{1e-4} times the mesh's average edge length.
+#' @param max_hole_size maximum number of boundary edges of a hole that will
+#' be triangulated (ear-cutting fill); holes larger than this threshold are
+#' left untouched (and will be reported as remaining boundary edges in
+#' \code{attr(..., "info")}).  Default is \code{100}.
+#' @param verbose whether to print a short before/after diagnostic report;
+#' default is \code{FALSE}.
+#'
+#' @returns A repaired triangular mesh of class \code{'mesh3d'}, with an
+#' additional attribute \code{"info"}, a named list reporting what was
+#' found and changed: \code{boundary_edges_before/after},
+#' \code{nonmanifold_edges_before/after}, \code{vertices_merged},
+#' \code{merge_tolerance}, \code{holes_filled}, \code{is_oriented},
+#' \code{is_orientable}, \code{normals_flipped_outward}, and
+#' \code{is_closed_manifold} (\code{TRUE} when the repaired mesh is closed
+#' and manifold, i.e. ready for \code{\link{mris_inflate}}).
+#'
+#' @examples
+#' if (is_not_cran()) {
+#'
+#'   mesh <- vcg_isosurface(left_hippocampus_mask)
+#'
+#'   repaired <- vcg_fix_defects(mesh, verbose = TRUE)
+#'
+#'   attr(repaired, "info")$is_closed_manifold
+#'
+#'   # repaired mesh can now be inflated
+#'   inflated <- mris_inflate(repaired, scale_brain = FALSE)
+#'
+#' }
+#'
+#' @export
+vcg_fix_defects <- function(
+    mesh,
+    merge_tolerance = NA,
+    max_hole_size   = 100L,
+    verbose         = FALSE
+) {
+  mesh <- meshintegrity(mesh, facecheck = TRUE)
+
+  vb <- mesh$vb[1:3, , drop = FALSE]
+  storage.mode(vb) <- "double"
+
+  it <- mesh$it - 1L
+  storage.mode(it) <- "integer"
+
+  merge_tolerance <- as.double(merge_tolerance)[[1L]]
+  if (is.na(merge_tolerance)) {
+    merge_tolerance <- -1.0
+  }
+
+  tmp <- vcgFixDefects(
+    vb_             = vb,
+    it_             = it,
+    merge_tolerance = merge_tolerance,
+    max_hole_size   = as.integer(max_hole_size)[[1L]],
+    verbose         = as.logical(verbose)[[1L]]
+  )
+
+  repaired <- structure(
+    list(
+      vb      = tmp$vb,
+      it      = tmp$it,
+      normals = tmp$normals
+    ),
+    class = c("ravetools_mesh3d", "mesh3d")
+  )
+
+  attr(repaired, "info") <- tmp$info
+
+  repaired
+}
+
 #' Simple 3-dimensional sphere mesh
 #' @param sub_division density of vertex in the resulting mesh
 #' @param normals whether the normal vectors should be calculated
@@ -517,7 +790,7 @@ vcg_isosurface <- function(
     sel <- sel & volume < threshold_ub
   }
 
-  mesh <- structure(vcgIsoSurface( sel, 0.5 ), class = "mesh3d")
+  mesh <- structure(vcgIsoSurface( sel, 0.5 ), class = c("ravetools_mesh3d", "mesh3d"))
 
   # voxel (0-indexed) to RAS
   mesh$vb <- (vox_to_ras %*% rbind(mesh$vb, 1))[seq_len(3), ]
@@ -584,7 +857,7 @@ vcg_uniform_remesh <- function(
   out <- structure(
     vcgUniformResample( vb, it, voxel_size, offset, discretize,
                         multi_sample, absolute_distance, merge_clost, !verbose ),
-    class = "mesh3d"
+    class = c("ravetools_mesh3d", "mesh3d")
   )
   return(meshintegrity(out))
 }
@@ -747,26 +1020,8 @@ vcg_raycaster <- function(
 vcg_kdtree_nearest <- function(
     target, query, k = 1, leaf_size = 16, max_depth = 64) {
 
-  get_point_cloud <- function(x) {
-    if (is.matrix(x) || is.array(x)) {
-      x <- x[drop = FALSE]
-      stopifnot2(
-        is.matrix(x) && ncol(x) %in% c(2, 3),
-        msg = "`vcg_kdtree_nearest`: input `x` must be a column-matrix with 2 or 3 columns and `n` rows as number of points."
-      )
-      if ( ncol(x)  == 2 ) {
-        x <- cbind(x, 0)
-      }
-      x <- t(x)
-    } else {
-      x <- meshintegrity(mesh = x, facecheck = FALSE)
-      x <- x$vb[1:3, , drop = FALSE]
-    }
-    x
-  }
-
-  target <- get_point_cloud(target)
-  query <- get_point_cloud(query)
+  target <- as_point_cloud_matrix(target, "vcg_kdtree_nearest")
+  query <- as_point_cloud_matrix(query, "vcg_kdtree_nearest")
 
   k <- as.integer(k)
   if (!is.finite(k) || k <= 0) {

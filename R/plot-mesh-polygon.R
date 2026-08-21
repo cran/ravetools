@@ -43,8 +43,8 @@
 #'   (80 triangles per sphere).
 #' @param add logical; if \code{TRUE} the faces are added to an existing plot
 #'   instead of opening a new one.  Default \code{FALSE}.
-#' @param axes,asp,xlim,ylim,xlab,ylab passed to \code{\link[graphics]{plot.default}}
-#'   when \code{add = FALSE}.
+#' @param axes,asp,xlim,ylim,xlab,ylab,main passed to
+#'   \code{\link[graphics]{plot.default}} when \code{add = FALSE}.
 #' @param zoom positive numeric magnification applied to the auto-computed
 #'   axis limits when \code{xlim} or \code{ylim} is \code{NULL}.  Values
 #'   greater than \code{1} zoom in, values in \code{(0, 1)} zoom out.
@@ -134,7 +134,7 @@
 #' mesh <- vcg_isosurface(left_hippocampus_mask)
 #'
 #' # Surface alone
-#' plot_mesh_polygon(
+#' plot(
 #'   mesh,
 #'   eye    = c(150, 30, 0),
 #'   lookat = c(0, 0, 0),
@@ -179,6 +179,7 @@ plot_mesh_polygon <- function(
     zoom   = 1,
     xlab   = "",
     ylab   = "",
+    main   = "",
     side   = c("front", "back", "both"),
     mesh_clipping = 1,
     sphere_subdivision = 1L,
@@ -202,10 +203,10 @@ plot_mesh_polygon <- function(
   # DIPSAUS DEBUG END
 
   # ---- 0. Normalize mesh + col list -------------------------------------
-  if (inherits(mesh, "mesh3d") || (!is.null(mesh$vb))) {
-    mesh_list <- list(mesh)
+  if (inherits(mesh, c("mesh3d", "fs.surface", "ieegio_surface"))) {
+    mesh_list <- list(ensure_mesh3d(mesh))
   } else {
-    mesh_list <- mesh
+    mesh_list <- lapply(mesh, ensure_mesh3d)
   }
   n_meshes <- length(mesh_list)
 
@@ -253,7 +254,7 @@ plot_mesh_polygon <- function(
 
   mesh_data <- vector("list", n_meshes)
   for (i in seq_len(n_meshes)) {
-    m  <- ensure_mesh3d(mesh_list[[i]])
+    m  <- mesh_list[[i]]
     vb <- m$vb
     if (nrow(vb) > 3L) vb <- vb[1:3, , drop = FALSE]
 
@@ -479,8 +480,8 @@ plot_mesh_polygon <- function(
       graphics::axis(2)
       graphics::box()
     }
-    if (nzchar(xlab) || nzchar(ylab)) {
-      graphics::title(xlab = xlab, ylab = ylab)
+    if (nzchar(xlab) || nzchar(ylab) || nzchar(main)) {
+      graphics::title(main = main, xlab = xlab, ylab = ylab)
     }
   }
 
@@ -500,4 +501,34 @@ plot_mesh_polygon <- function(
                     col = col_shaded, border = border_col)
 
   invisible(list(xlim = xlim, ylim = ylim))
+}
+
+#' @export
+plot.ravetools_mesh3d <- function(x, method = c("polygon", "dotcloud", "rgl"), ...) {
+  method <- match.arg(method)
+  switch(
+    method,
+    "polygon" = {
+      plot_mesh_polygon(mesh = x, ...)
+    },
+    "dotcloud" = {
+      plot_mesh_dotcloud(mesh = x, ...)
+    },
+    {
+      # rgl
+      rgl_view({
+        rgl_call("shade3d", x, ...)
+      })
+    }
+  )
+}
+
+#' @export
+print.ravetools_mesh3d <- function(x, prefix = "", ...) {
+  cat(prefix, " mesh3d object with ", ncol(x$vb), " vertices, ",
+      paste(c(if (length(x$ip)) paste(length(x$ip), "points"),
+              if (length(x$is)) paste(ncol(x$is), "segments"),
+              if (length(x$it)) paste(ncol(x$it), "triangles"),
+              if (length(x$ib)) paste(ncol(x$ib), "quads")), collapse = ", "),
+      ".\n", sep = "")
 }

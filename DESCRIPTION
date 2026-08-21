@@ -2,10 +2,11 @@ Package: ravetools
 Type: Package
 Title: Signal and Image Processing Toolbox for Analyzing Intracranial
         Electroencephalography Data
-Version: 0.2.6
+Version: 0.3.0
 Language: en-US
 Authors@R: c(
-    person("Zhengjia", "Wang", email = "dipterix.wang@gmail.com", role = c("aut", "cre")),
+    person("Zhengjia", "Wang", email = "dipterix.wang@gmail.com", role = c("aut", "cre"),
+            comment = c(ORCID = "0000-0001-5629-1116")),
     person("John", "Magnotti", email = "john.magnotti@pennmedicine.upenn.edu", role = c("aut")),
     person("Michael", "Beauchamp", email = "michael.beauchamp@pennmedicine.upenn.edu", role = c("aut")),
     person("Trustees of the University of Pennsylvania", role = c("cph"), 
@@ -60,8 +61,9 @@ Suggests: fftwtools, bit64, grDevices, microbenchmark,
 LazyData: true
 Config/roxygen2/version: 8.0.0
 NeedsCompilation: yes
-Packaged: 2026-05-31 00:30:12 UTC; dipterix
-Author: Zhengjia Wang [aut, cre],
+Packaged: 2026-08-21 00:01:40 UTC; dipterix
+Author: Zhengjia Wang [aut, cre] (ORCID:
+    <https://orcid.org/0000-0001-5629-1116>),
   John Magnotti [aut],
   Michael Beauchamp [aut],
   Trustees of the University of Pennsylvania [cph] (All files in this
@@ -78,4 +80,4 @@ Author: Zhengjia Wang [aut, cre],
     located at src/vcglib/)
 Maintainer: Zhengjia Wang <dipterix.wang@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-05-31 05:10:27 UTC
+Date/Publication: 2026-08-21 13:20:10 UTC

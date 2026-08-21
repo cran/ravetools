@@ -9,6 +9,10 @@ bucketFillVolume <- function(volume, x, y, z, fill) {
     .Call(`_ravetools_bucketFillVolume`, volume, x, y, z, fill)
 }
 
+carla_zmin_all <- function(x_ord, ind) {
+    .Call(`_ravetools_carla_zmin_all`, x_ord, ind)
+}
+
 collapser_cplx <- function(x, keep, method = 1L, average = 0L) {
     .Call(`_ravetools_collapser_cplx`, x, keep, method, average)
 }
@@ -41,42 +45,62 @@ fastcov <- function(x1, x2, col1 = NULL, col2 = NULL, df = -1.0) {
     .Call(`_ravetools_fastcov`, x1, x2, col1, col2, df)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_r2c <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_r2c`, data, HermConj, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_c2c <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2c`, data, inverse, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_c2r <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2r`, data, HermConj, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 mvfftw_r2c <- function(data, fftwplanopt = 0L, HermConj = 0L, ret = NULL) {
     .Call(`_ravetools_mvfftw_r2c`, data, fftwplanopt, HermConj, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 mvfftw_c2c <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_mvfftw_c2c`, data, inverse, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 mvfftw_c2r <- function(data, fftwplanopt = 0L, retrows = 0L, ret = NULL) {
     .Call(`_ravetools_mvfftw_c2r`, data, fftwplanopt, retrows, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_r2c_2d <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_r2c_2d`, data, HermConj, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_c2c_2d <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2c_2d`, data, inverse, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_r2c_3d <- function(data, HermConj = 1L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_r2c_3d`, data, HermConj, fftwplanopt, ret)
 }
 
+#' @rdname fftw-internal
+#' @export
 fftw_c2c_3d <- function(data, inverse = 0L, fftwplanopt = 0L, ret = NULL) {
     .Call(`_ravetools_fftw_c2c_3d`, data, inverse, fftwplanopt, ret)
 }
@@ -541,6 +565,30 @@ Vector3__set_from_matrix_scale <- function(self, m) {
     invisible(.Call(`_ravetools_Vector3__set_from_matrix_scale`, self, m))
 }
 
+mrisSmooth <- function(vb_, it_, niterations = 10L, npasses = 1L, rescale = FALSE, verbose = FALSE) {
+    .Call(`_ravetools_mrisSmooth`, vb_, it_, niterations, npasses, rescale, verbose)
+}
+
+mrisInflate <- function(vb_, it_, n_averages = 16L, niterations = 10L, l_spring_norm = 1.0, l_dist = 0.1, momentum = 0.9, dt = 0.9, desired_rms = 0.015, scale_brain = TRUE, verbose = FALSE) {
+    .Call(`_ravetools_mrisInflate`, vb_, it_, n_averages, niterations, l_spring_norm, l_dist, momentum, dt, desired_rms, scale_brain, verbose)
+}
+
+mrisSphere <- function(vb_, it_, target_radius = 100.0, n_averages = 64L, niterations = 25L, l_dist = 1.0, l_area = 1.0, momentum = 0.9, dt = 0.05, verbose = FALSE) {
+    .Call(`_ravetools_mrisSphere`, vb_, it_, target_radius, n_averages, niterations, l_dist, l_area, momentum, dt, verbose)
+}
+
+mrisMakeSurfaces <- function(vb_, it_, volume_, ras2ijk_, white_intensity, pial_intensity, max_thickness = 5.0, step_size = 0.4, n_averages = 4L, niterations = 10L, l_intensity = 1.0, l_spring = 0.5, momentum = 0.9, dt = 0.5, verbose = FALSE) {
+    .Call(`_ravetools_mrisMakeSurfaces`, vb_, it_, volume_, ras2ijk_, white_intensity, pial_intensity, max_thickness, step_size, n_averages, niterations, l_intensity, l_spring, momentum, dt, verbose)
+}
+
+mrisCurvature <- function(vb_, it_, verbose = FALSE) {
+    .Call(`_ravetools_mrisCurvature`, vb_, it_, verbose)
+}
+
+mrisRemesh <- function(vb_, it_, target_edge_len, niterations = 5L, n_smooth = 2L, damping = 0.99, verbose = FALSE) {
+    .Call(`_ravetools_mrisRemesh`, vb_, it_, target_edge_len, niterations, n_smooth, damping, verbose)
+}
+
 rawToUInt8 <- function(x) {
     .Call(`_ravetools_rawToUInt8`, x)
 }
@@ -577,8 +625,16 @@ rawToString <- function(x) {
     .Call(`_ravetools_rawToString`, x)
 }
 
-resample3D <- function(arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na) {
-    .Call(`_ravetools_resample3D`, arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na)
+register_linear_cpp <- function(fixed, fixedDim, fixedVox2Ras, moving, movingDim, movingVox2Ras, type, metric, shrinkFactors, smoothingSigmas, iterations, samplingRate, learningRate, numberOfBins, seed, initTransform, fixedMask, movingMask, verbose = FALSE) {
+    .Call(`_ravetools_register_linear_cpp`, fixed, fixedDim, fixedVox2Ras, moving, movingDim, movingVox2Ras, type, metric, shrinkFactors, smoothingSigmas, iterations, samplingRate, learningRate, numberOfBins, seed, initTransform, fixedMask, movingMask, verbose)
+}
+
+register_syn_cpp <- function(fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, verbose = FALSE) {
+    .Call(`_ravetools_register_syn_cpp`, fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, verbose)
+}
+
+resample3D <- function(arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na, interpolation = 0L) {
+    .Call(`_ravetools_resample3D`, arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na, interpolation)
 }
 
 shiftArray <- function(x, alongIdx, unitIdx, shiftAmount) {
@@ -587,6 +643,10 @@ shiftArray <- function(x, alongIdx, unitIdx, shiftAmount) {
 
 getDefaultNumThreads <- function() {
     .Call(`_ravetools_getDefaultNumThreads`)
+}
+
+vcgDetectCollision <- function(x_, x_it_, y_, y_it_, mode_x, mode_y, radius, early_stop, include_interior) {
+    .Call(`_ravetools_vcgDetectCollision`, x_, x_it_, y_, y_it_, mode_x, mode_y, radius, early_stop, include_interior)
 }
 
 vcgIsoSurface <- function(array_, thresh) {
@@ -613,6 +673,10 @@ vcgEdgeSubdivision <- function(vb_, it_) {
     .Call(`_ravetools_vcgEdgeSubdivision`, vb_, it_)
 }
 
+vcgEdgeLengthSubdivision <- function(vb_, it_, maxEdgeLen, maxIter) {
+    .Call(`_ravetools_vcgEdgeLengthSubdivision`, vb_, it_, maxEdgeLen, maxIter)
+}
+
 vcgVolume <- function(mesh_) {
     .Call(`_ravetools_vcgVolume`, mesh_)
 }
@@ -635,6 +699,26 @@ vcgKDTreeSearch <- function(target_, query_, k, nPointsPerCell = 16L, maxDepth =
 
 vcgSubset <- function(vb_, it_, selector_) {
     .Call(`_ravetools_vcgSubset`, vb_, it_, selector_)
+}
+
+vcgCountEdgeDefects <- function(vb_, it_) {
+    .Call(`_ravetools_vcgCountEdgeDefects`, vb_, it_)
+}
+
+vcgAverageEdgeLength <- function(vb_, it_) {
+    .Call(`_ravetools_vcgAverageEdgeLength`, vb_, it_)
+}
+
+vcgMaxEdgeLength <- function(vb_, it_) {
+    .Call(`_ravetools_vcgMaxEdgeLength`, vb_, it_)
+}
+
+vcgMeshPatchFaces <- function(vb_, it_, boundary_seq, seed_face) {
+    .Call(`_ravetools_vcgMeshPatchFaces`, vb_, it_, boundary_seq, seed_face)
+}
+
+vcgFixDefects <- function(vb_, it_, merge_tolerance = -1.0, max_hole_size = 100L, verbose = FALSE) {
+    .Call(`_ravetools_vcgFixDefects`, vb_, it_, merge_tolerance, max_hole_size, verbose)
 }
 
 # Register entry points for exported C++ functions

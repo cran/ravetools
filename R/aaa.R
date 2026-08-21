@@ -26,6 +26,14 @@ NULL
   }
 }
 
+`%||%` <- function(a, b) {
+  if (is.null(a)) {
+    b
+  } else {
+    a
+  }
+}
+
 deparse1 <- function(expr, collapse = " ") {
   paste(deparse(expr), collapse = collapse)
 }
@@ -232,3 +240,107 @@ lapply_async <- function(x, FUN, FUN.args = list(), callback = NULL, ncores = NU
   }
   ret
 }
+
+
+#' @title Map continuous values to colors
+#' @description
+#' Linearly maps a numeric vector onto a color ramp, clamping values outside
+#' the given range to the range's endpoints.
+#'
+#' @param values numeric vector of values to map to colors
+#' @param clim length-two numeric vector giving the value range to map from;
+#' values outside \code{[clim[1], clim[2]]} are clamped to the nearer endpoint
+#' before mapping. Default is \code{range(values, na.rm = TRUE)}
+#' @param cmap the color ramp to map onto: either a vector of colors (passed
+#' to \code{\link[grDevices]{colorRamp}} to build the ramp function) or a
+#' function such as the one returned by \code{\link[grDevices]{colorRamp}}
+#' that takes a numeric vector with elements in \code{[0, 1]} and returns an
+#' \code{n x 3} (or \code{n x 4}, with alpha) matrix of color-channel values
+#' in \code{[0, 255]}. Default is \code{grDevices::hcl.colors(11)}
+#' @param ... passed to \code{\link[grDevices]{colorRamp}} when \code{cmap} is
+#' a vector of colors (for example, \code{alpha = TRUE} to build an
+#' alpha-aware ramp)
+#'
+#' @returns A character vector of \code{'#RRGGBB'} (or \code{'#RRGGBBAA'})
+#' color strings, the same length as \code{values}.
+#'
+#' @examples
+#'
+#' x <- rnorm(100)
+#' col <- color_ramp_continuous(x)
+#'
+#' plot(x, col = col, pch = 16)
+#'
+#'
+#' # Change color palettes with vector of colors
+#' col <- color_ramp_continuous(
+#'   x, cmap = c("lightgreen", "white", "pink"))
+#' plot(x, col = col, pch = 16)
+#'
+#' # Using colorRamp
+#' col <- color_ramp_continuous(
+#'   x, cmap = colorRamp(c("black", "orangered", "orange")))
+#' plot(x, col = col, pch = 16)
+#'
+#' # Using color ramp palette `function(n) { ... }`
+#' col <- color_ramp_continuous(
+#'   x, cmap = hcl.colors, palette = "Blue-Red 3")
+#' plot(x, col = col, pch = 16)
+#'
+#' # Set range
+#' col <- color_ramp_continuous(
+#'   x, clim = c(0, 1),
+#'   cmap = c("black", "orangered", "orange"))
+#' plot(x, col = col, pch = 16)
+#'
+#'
+#'
+#' @export
+color_ramp_continuous <- function(values, clim = range(values, na.rm = TRUE),
+                                  cmap = grDevices::hcl.colors(11), ...) {
+  clim[is.finite(clim)]
+  if (!length(clim)) {
+    stop("Value range is invalid: the value range must be finite values")
+  }
+  clim <- range(clim, na.rm = TRUE)
+  span <- clim[[2]] - clim[[1]]
+  if (span <= 0) { span <- 1}
+  values_01 <- (values - clim[[1]]) / span
+
+  values_01[values_01 < 0] <- 0
+  values_01[values_01 > 1] <- 1
+
+  # cmap is either a vector or a function returned by colorRamp
+  if (!is.function(cmap)) {
+    cmap <- grDevices::colorRamp(colors = cmap, ...)(values_01)
+  } else {
+    if (names(formals(cmap))[[1]] == "n") {
+      # colorRampPalette
+      cmap <- cmap(256, ...)
+      return(cmap[round(values_01 * 255) + 1])
+    } else {
+      cmap <- cmap(values_01, ...)
+    }
+  }
+  # cmap <- cmap(values_01)
+  if (ncol(cmap) >= 4) {
+    col <- grDevices::rgb(
+      red = cmap[, 1],
+      green = cmap[, 2],
+      blue = cmap[, 3],
+      alpha =  cmap[, 4],
+      maxColorValue = 255
+    )
+  } else {
+    col <- grDevices::rgb(
+      red = cmap[, 1],
+      green = cmap[, 2],
+      blue = cmap[, 3],
+      maxColorValue = 255
+    )
+  }
+  col
+}
+
+
+# color_ramp_

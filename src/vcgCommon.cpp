@@ -1,5 +1,77 @@
 #include <Rcpp.h>
 #include "vcgCommon.h"
+#include <vcg/complex/algorithms/hole.h>
+#include <unordered_map>
+#include <unordered_set>
+#include <cstdint>
+
+namespace {
+
+// Count boundary (multiplicity 1) and non-manifold (multiplicity > 2) edges
+// directly from the face/vertex-index structure, robust regardless of
+// whether VCG's FaceFace topology has been (re)built. Shared by routines
+// that need to detect or report mesh topology defects (e.g. vcgFixDefects,
+// vcgCountEdgeDefects).
+void countEdgeDefects(ravetools::MyMesh &m, int &boundary, int &nonmanifold)
+{
+  std::unordered_map<int64_t, int> edge_count;
+  edge_count.reserve((size_t)m.fn * 3);
+  int64_t nv = (int64_t)m.vert.size();
+
+  auto add_edge = [&](int a, int b) {
+    if (a > b) std::swap(a, b);
+    edge_count[(int64_t)a * nv + (int64_t)b]++;
+  };
+
+  for (ravetools::MyMesh::FaceIterator fi = m.face.begin(); fi != m.face.end(); ++fi) {
+    if (fi->IsD()) continue;
+    int i0 = (int)vcg::tri::Index(m, fi->V(0));
+    int i1 = (int)vcg::tri::Index(m, fi->V(1));
+    int i2 = (int)vcg::tri::Index(m, fi->V(2));
+    add_edge(i0, i1);
+    add_edge(i1, i2);
+    add_edge(i2, i0);
+  }
+
+  boundary = 0;
+  nonmanifold = 0;
+  for (const auto &kv : edge_count) {
+    if (kv.second == 1) boundary++;
+    else if (kv.second > 2) nonmanifold++;
+  }
+}
+
+// Average length of all (non-deleted) face edges of the mesh, counting each
+// edge once per incident face (i.e. shared edges are counted twice). Useful
+// as a scale-aware reference length, e.g. to derive a vertex-merge tolerance.
+double averageEdgeLength(ravetools::MyMesh &m)
+{
+  double sum = 0.0;
+  int cnt = 0;
+  for (ravetools::MyMesh::FaceIterator fi = m.face.begin(); fi != m.face.end(); ++fi) {
+    if (fi->IsD()) continue;
+    for (int j = 0; j < 3; j++) {
+      sum += vcg::Distance(fi->V(j)->P(), fi->V((j + 1) % 3)->P());
+      cnt++;
+    }
+  }
+  return (cnt > 0) ? (sum / cnt) : 0.0;
+}
+
+double maxEdgeLength(ravetools::MyMesh &m)
+{
+  double maxLen = 0.0;
+  for (ravetools::MyMesh::FaceIterator fi = m.face.begin(); fi != m.face.end(); ++fi) {
+    if (fi->IsD()) continue;
+    for (int j = 0; j < 3; j++) {
+      double len = vcg::Distance(fi->V(j)->P(), fi->V((j + 1) % 3)->P());
+      if (len > maxLen) maxLen = len;
+    }
+  }
+  return maxLen;
+}
+
+} // namespace
 
 // [[Rcpp::export]]
 SEXP vcgIsoSurface(SEXP array_, double thresh) {
@@ -323,6 +395,7 @@ SEXP vcgUniformResample(
       normals(2,i) = (*vi).N()[2];
       ++vi;
     }
+    Rcpp::checkUserInterrupt();
     ravetools::FaceIterator fi = offsetMesh.face.begin();
     for ( int i = 0; i < offsetMesh.fn ; i++, fi++ ) {
       itout(0, i) = indiceout[ fi->cV(0) ] + 1;
@@ -421,7 +494,7 @@ SEXP vcgEdgeSubdivision(SEXP vb_, SEXP it_)
     // 3) allocate one new vertex PER EDGE
     vcg::tri::Allocator<ravetools::MyMesh>::AddVertices(m, origEn);
 
-    // 4) compute each midpoint and build a map (edge->new‐vertex)
+    // 4) compute each midpoint and build a map (edge->new-vertex)
     std::unordered_map<
       ravetools::EdgePair,
       ravetools::VertexPointer,
@@ -432,7 +505,7 @@ SEXP vcgEdgeSubdivision(SEXP vb_, SEXP it_)
     for(int i=0; i<origEn; ++i){
       ravetools::MyPEdge &pe = edgeVec[i];
       ravetools::FacePointer f = pe.f;               // face pointer
-      int zi = pe.z;               // local index 0–2
+      int zi = pe.z;               // local index 0-2
       ravetools::VertexPointer v0 = f->V(zi);
       ravetools::VertexPointer v1 = f->V((zi+1)%3);
       // new midpoint vertex is at m.vert[origVn + i]
@@ -478,6 +551,41 @@ SEXP vcgEdgeSubdivision(SEXP vb_, SEXP it_)
 
     Rcpp::List out = ravetools::IOMesh<ravetools::MyMesh>::vcgToR(m, false);
     return out;
+
+  } catch (std::exception& e) {
+    Rcpp::stop(e.what());
+  } catch (...) {
+    Rcpp::stop("unknown exception");
+  }
+  return R_NilValue; // -Wall
+}
+
+// [[Rcpp::export]]
+SEXP vcgEdgeLengthSubdivision(SEXP vb_, SEXP it_, double maxEdgeLen, int maxIter)
+{
+  try {
+    ravetools::MyMesh m;
+    ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+
+    m.face.EnableFFAdjacency();
+
+    vcg::tri::MidPoint<ravetools::MyMesh> midFunctor(&m);
+    vcg::tri::EdgeLen<ravetools::MyMesh, ravetools::ScalarType> edgePred(
+        static_cast<ravetools::ScalarType>(maxEdgeLen));
+
+    for (int iter = 0; iter < maxIter; iter++) {
+      vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+      bool refined = vcg::tri::RefineE<
+          ravetools::MyMesh,
+          vcg::tri::MidPoint<ravetools::MyMesh>,
+          vcg::tri::EdgeLen<ravetools::MyMesh, ravetools::ScalarType>>(
+          m, midFunctor, edgePred);
+      if (!refined) break;
+    }
+
+    vcg::tri::UpdateNormal<ravetools::MyMesh>::PerVertexAngleWeighted(m);
+    vcg::tri::UpdateNormal<ravetools::MyMesh>::NormalizePerVertex(m);
+    return ravetools::IOMesh<ravetools::MyMesh>::vcgToR(m, false);
 
   } catch (std::exception& e) {
     Rcpp::stop(e.what());
@@ -925,4 +1033,357 @@ SEXP vcgSubset(SEXP vb_ , SEXP it_, const Rcpp::LogicalVector selector_) {
   }
   return R_NilValue; // -Wall
 
+}
+
+// [[Rcpp::export]]
+Rcpp::List vcgCountEdgeDefects(SEXP vb_, SEXP it_) {
+  try {
+    ravetools::MyMesh m;
+    int check = ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+    if (check < 0) {
+      Rcpp::stop("vcgCountEdgeDefects: mesh has no faces and/or no vertices");
+    }
+
+    int boundary = 0, nonmanifold = 0;
+    countEdgeDefects(m, boundary, nonmanifold);
+
+    return Rcpp::List::create(
+      Rcpp::Named("boundary_edges")    = boundary,
+      Rcpp::Named("nonmanifold_edges") = nonmanifold,
+      Rcpp::Named("is_closed_manifold") = (boundary == 0 && nonmanifold == 0)
+    );
+
+  } catch (std::exception& e) {
+    Rcpp::stop(e.what());
+  } catch (...) {
+    Rcpp::stop("unknown exception");
+  }
+  return R_NilValue; // -Wall
+}
+
+// [[Rcpp::export]]
+double vcgAverageEdgeLength(SEXP vb_, SEXP it_) {
+  try {
+    ravetools::MyMesh m;
+    int check = ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+    if (check < 0) {
+      Rcpp::stop("vcgAverageEdgeLength: mesh has no faces and/or no vertices");
+    }
+
+    return averageEdgeLength(m);
+
+  } catch (std::exception& e) {
+    Rcpp::stop(e.what());
+  } catch (...) {
+    Rcpp::stop("unknown exception");
+  }
+  return NA_REAL; // -Wall
+}
+
+// [[Rcpp::export]]
+double vcgMaxEdgeLength(SEXP vb_, SEXP it_) {
+  try {
+    ravetools::MyMesh m;
+    int check = ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+    if (check < 0) {
+      Rcpp::stop("vcgMaxEdgeLength: mesh has no faces and/or no vertices");
+    }
+    return maxEdgeLength(m);
+  } catch (std::exception& e) {
+    Rcpp::stop(e.what());
+  } catch (...) {
+    Rcpp::stop("unknown exception");
+  }
+  return NA_REAL; // -Wall
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector vcgMeshPatchFaces(SEXP vb_, SEXP it_,
+                                       Rcpp::IntegerVector boundary_seq,
+                                       int seed_face)
+{
+  try {
+    ravetools::MyMesh m;
+    ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+    int nv = (int)m.VN();
+    int nf = (int)m.FN();
+
+    m.face.EnableFFAdjacency();
+    vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+
+    // Build boundary edge set (canonical key: min*nv + max)
+    std::unordered_set<int64_t> cut_edges;
+    cut_edges.reserve(boundary_seq.size());
+    int nb = (int)boundary_seq.size();
+    for (int k = 0; k < nb; k++) {
+      int a = boundary_seq[k], b = boundary_seq[(k + 1) % nb];
+      cut_edges.insert((int64_t)std::min(a, b) * nv + std::max(a, b));
+    }
+
+    // BFS: returns 1-based face indices reachable from seed_fi
+    auto bfs = [&](int seed_fi) -> std::vector<int> {
+      std::vector<bool> vis(nf, false);
+      std::vector<int>  q(nf);
+      int head = 0, tail = 0;
+      vis[seed_fi] = true;
+      q[tail++] = seed_fi;
+      while (head < tail) {
+        int fi = q[head++];
+        ravetools::FacePointer fp = &m.face[fi];
+        for (int e = 0; e < 3; e++) {
+          if (fp->FFp(e) == fp) continue; // mesh boundary edge
+          int va  = (int)vcg::tri::Index(m, fp->V(e));
+          int vbi = (int)vcg::tri::Index(m, fp->V((e + 1) % 3));
+          if (cut_edges.count((int64_t)std::min(va, vbi) * nv + std::max(va, vbi)))
+            continue; // cut edge
+          int nb_fi = (int)vcg::tri::Index(m, fp->FFp(e));
+          if (!vis[nb_fi]) { vis[nb_fi] = true; q[tail++] = nb_fi; }
+        }
+      }
+      std::vector<int> result;
+      result.reserve(tail);
+      for (int i = 0; i < nf; i++)
+        if (vis[i] && !m.face[i].IsD()) result.push_back(i + 1); // 1-based
+      return result;
+    };
+
+    // Determine seed face
+    int seed_fi  = seed_face;
+    int other_fi = -1;
+
+    if (seed_face < 0) {
+      // Find two faces adjacent to first boundary edge
+      int v0 = boundary_seq[0], v1 = boundary_seq[1];
+      int64_t key = (int64_t)std::min(v0, v1) * nv + std::max(v0, v1);
+      for (auto fi = m.face.begin(); fi != m.face.end() && seed_fi < 0; ++fi) {
+        if (fi->IsD()) continue;
+        for (int e = 0; e < 3; e++) {
+          int va  = (int)vcg::tri::Index(m, fi->V(e));
+          int vbi = (int)vcg::tri::Index(m, fi->V((e + 1) % 3));
+          if ((int64_t)std::min(va, vbi) * nv + std::max(va, vbi) == key) {
+            seed_fi = (int)vcg::tri::Index(m, &*fi);
+            ravetools::FacePointer nbfp = fi->FFp(e);
+            if (nbfp != &*fi)
+              other_fi = (int)vcg::tri::Index(m, nbfp);
+            break;
+          }
+        }
+      }
+      if (seed_fi < 0)
+        Rcpp::stop("vcgMeshPatchFaces: could not find a face adjacent to the first boundary edge.");
+      if (other_fi < 0)
+        Rcpp::stop("vcgMeshPatchFaces: first boundary edge is on the mesh boundary; please specify seed_vertex explicitly.");
+    }
+
+    std::vector<int> patch = bfs(seed_fi);
+
+    // Non-dividing: loop does not partition the mesh, return all faces
+    if ((int)patch.size() == nf) return Rcpp::wrap(patch);
+
+    // Auto-select smaller side
+    if (seed_face < 0 && (int)patch.size() > nf / 2) {
+      patch = bfs(other_fi);
+    }
+
+    return Rcpp::wrap(patch);
+
+  } catch (std::exception& e) {
+    Rcpp::stop(e.what());
+  } catch (...) {
+    Rcpp::stop("unknown exception");
+  }
+  return Rcpp::IntegerVector(); // -Wall
+}
+
+// ---------------------------------------------------------------------------
+// Detect and repair common defects in triangular surface meshes so they
+// become closed, manifold, genus-0 surfaces, a hard precondition for
+// algorithms such as mris_inflate (see mrisCheckClosedManifold in mrisCommon.cpp).
+//
+// Typical source of these defects: isosurfaces extracted from volumes
+// (e.g. vcg_isosurface) via marching-cubes-style algorithms, which can leave
+// behind small "cracks", isolated boundary-edge loops bounding tiny holes
+// that are not caused by duplicated/coincident vertices (so simple vertex
+// welding does not close them) but are genuine small gaps in the tessellation.
+//
+// Repair strategy (all via VCG's existing, well-tested algorithms):
+//   1. Remove degenerate / duplicate faces.
+//   2. Weld near-coincident vertices (closes cracks that *are* caused by
+//      duplicated vertices).
+//   3. Ear-cut fill any remaining small boundary loops ("isolated edges").
+//   4. Remove unreferenced vertices and compact.
+//   5. Re-orient faces coherently (consistent winding order across the
+//      surface) and, if the result is a single watertight component, flip
+//      normals to point outward.
+//
+// Parameters:
+//   merge_tolerance  distance (in mesh units) below which vertices are welded
+//                    together; non-positive => auto (1e-4 * average edge length)
+//   max_hole_size    maximum number of boundary edges of a hole that will be
+//                    triangulated (ear-cutting fill); holes larger than this
+//                    are left untouched (and will be reported as remaining
+//                    boundary edges)
+//   verbose          print a short before/after diagnostic report
+//
+// Returns a list with the repaired mesh (vb, it, normals) plus an `info`
+// list describing what was found/changed.
+// ---------------------------------------------------------------------------
+// [[Rcpp::export]]
+Rcpp::List vcgFixDefects(
+    SEXP   vb_,
+    SEXP   it_,
+    double merge_tolerance = -1.0,
+    int    max_hole_size   = 100,
+    bool   verbose         = false
+) {
+    try {
+        ravetools::MyMesh m;
+        int check = ravetools::IOMesh<ravetools::MyMesh>::vcgReadR(m, vb_, it_);
+        if (check < 0) {
+            Rcpp::stop("vcgFixDefects: mesh has no faces and/or no vertices");
+        }
+
+        m.vert.EnableVFAdjacency();
+        m.face.EnableFFAdjacency();
+        m.face.EnableVFAdjacency();
+        m.face.EnableNormal();
+
+        vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+        int boundary_before = 0, nonmanifold_before = 0;
+        countEdgeDefects(m, boundary_before, nonmanifold_before);
+
+        if (verbose) {
+            Rprintf("vcgFixDefects: input nv=%d nf=%d, boundary edges=%d, non-manifold edges=%d\n",
+                    m.vn, m.fn, boundary_before, nonmanifold_before);
+        }
+
+        // 1. Remove degenerate / duplicate faces (zero-area, repeated triangles)
+        vcg::tri::Clean<ravetools::MyMesh>::RemoveDegenerateFace(m);
+        Rcpp::checkUserInterrupt();
+
+        vcg::tri::Clean<ravetools::MyMesh>::RemoveDuplicateFace(m);
+        Rcpp::checkUserInterrupt();
+
+        if (verbose) {
+            Rprintf("vcgFixDefects: [1] removed degenerate/duplicate faces -> nv=%d nf=%d\n",
+                    m.vn, m.fn);
+        }
+
+        // 2. Weld near-coincident vertices, closes cracks that arise from
+        //    duplicated vertices at (near-)identical positions.
+        double tol = merge_tolerance;
+        if (tol <= 0.0) {
+            double avgLen = averageEdgeLength(m);
+            tol = avgLen * 1e-4;
+        }
+
+        int merged = 0;
+        if (tol > 0.0) {
+            merged = vcg::tri::Clean<ravetools::MyMesh>::MergeCloseVertex(
+                m, (ravetools::ScalarType)tol);
+        }
+
+        Rcpp::checkUserInterrupt();
+        if (verbose) {
+            Rprintf("vcgFixDefects: [2] merged %d close vertices -> nv=%d nf=%d\n",
+                    merged, m.vn, m.fn);
+        }
+
+        // 3. Ear-cut fill any remaining small boundary loops ("isolated
+        //    edges" / small holes that are genuine gaps, not duplicate-vertex
+        //    cracks, and therefore are not closed by welding).
+        vcg::tri::Allocator<ravetools::MyMesh>::CompactEveryVector(m);
+        vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+        Rcpp::checkUserInterrupt();
+
+        // MinimumWeightEar inspects neighboring faces' and vertices' normals
+        // (FFlip()->cN(), e0.v->N()) while picking the best ear to cut, so
+        // both must be allocated *and* populated before EarCuttingFill runs.
+        vcg::tri::UpdateNormal<ravetools::MyMesh>::PerFaceNormalized(m);
+        vcg::tri::UpdateNormal<ravetools::MyMesh>::PerVertexNormalized(m);
+        Rcpp::checkUserInterrupt();
+
+        if (verbose) {
+          Rprintf("vcgFixDefects: [3a] topology/normals ready, starting hole fill (max_hole_size=%d)\n", max_hole_size);
+        }
+        int holes_filled = vcg::tri::Hole<ravetools::MyMesh>::template EarCuttingFill<
+            vcg::tri::MinimumWeightEar<ravetools::MyMesh> >(m, max_hole_size, false);
+        if (verbose) {
+          Rprintf("vcgFixDefects: [3b] filled %d hole(s) -> nv=%d nf=%d\n",
+                  holes_filled, m.vn, m.fn);
+        }
+
+        // 4. Remove unreferenced vertices, compact containers
+        vcg::tri::Clean<ravetools::MyMesh>::RemoveUnreferencedVertex(m);
+        vcg::tri::Allocator<ravetools::MyMesh>::CompactEveryVector(m);
+        Rcpp::checkUserInterrupt();
+        if (verbose) {
+          Rprintf("vcgFixDefects: [4] removed unreferenced vertices -> nv=%d nf=%d\n", m.vn, m.fn);
+        }
+
+        // 5. Fix face winding order: orient all faces coherently
+        vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+        if (verbose) {
+          Rprintf("vcgFixDefects: [5a] topology rebuilt, orienting coherently\n");
+        }
+        bool is_oriented = false, is_orientable = false;
+        vcg::tri::Clean<ravetools::MyMesh>::OrientCoherentlyMesh(m, is_oriented, is_orientable);
+        Rcpp::checkUserInterrupt();
+        if (verbose) {
+          Rprintf("vcgFixDefects: [5b] oriented=%d orientable=%d\n",
+                  (int)is_oriented, (int)is_orientable);
+        }
+
+        // If the mesh is now a single watertight, coherently-oriented
+        // component, make sure normals point outward (assumes watertight,
+        // as documented by VCG's FlipNormalOutside).
+        bool flipped = false;
+        int boundary_after = 0, nonmanifold_after = 0;
+        countEdgeDefects(m, boundary_after, nonmanifold_after);
+        if (is_orientable && boundary_after == 0 && nonmanifold_after == 0) {
+            vcg::tri::UpdateTopology<ravetools::MyMesh>::FaceFace(m);
+            flipped = vcg::tri::Clean<ravetools::MyMesh>::FlipNormalOutside(m);
+        }
+        Rcpp::checkUserInterrupt();
+
+        // Recompute normals for output
+        vcg::tri::UpdateNormal<ravetools::MyMesh>::PerVertexNormalizedPerFace(m);
+        Rcpp::checkUserInterrupt();
+
+        vcg::tri::UpdateNormal<ravetools::MyMesh>::NormalizePerVertex(m);
+        Rcpp::checkUserInterrupt();
+
+        if (verbose) {
+            Rprintf("vcgFixDefects: removed/merged %d vertices (tol=%.6g), filled %d hole(s)\n",
+                    merged, tol, holes_filled);
+            Rprintf("vcgFixDefects: output nv=%d nf=%d, boundary edges=%d, non-manifold edges=%d, "
+                    "oriented=%s, orientable=%s, normals_flipped_outward=%s\n",
+                    m.vn, m.fn, boundary_after, nonmanifold_after,
+                    is_oriented ? "yes" : "no", is_orientable ? "yes" : "no",
+                    flipped ? "yes" : "no");
+        }
+
+        Rcpp::List out = ravetools::IOMesh<ravetools::MyMesh>::vcgToR(m, true);
+        out["info"] = Rcpp::List::create(
+            Rcpp::Named("boundary_edges_before")    = boundary_before,
+            Rcpp::Named("boundary_edges_after")     = boundary_after,
+            Rcpp::Named("nonmanifold_edges_before") = nonmanifold_before,
+            Rcpp::Named("nonmanifold_edges_after")  = nonmanifold_after,
+            Rcpp::Named("vertices_merged")          = merged,
+            Rcpp::Named("merge_tolerance")          = tol,
+            Rcpp::Named("holes_filled")             = holes_filled,
+            Rcpp::Named("is_oriented")              = is_oriented,
+            Rcpp::Named("is_orientable")            = is_orientable,
+            Rcpp::Named("normals_flipped_outward")  = flipped,
+            Rcpp::Named("is_closed_manifold")       = (boundary_after == 0 && nonmanifold_after == 0)
+        );
+
+        return out;
+
+    } catch (std::exception& e) {
+        Rcpp::stop(e.what());
+    } catch (...) {
+        Rcpp::stop("unknown exception");
+    }
+    return R_NilValue; // -Wall
 }
