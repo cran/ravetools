@@ -1,6 +1,6 @@
-d7c805fb2ecce8e99412a46768070dae *DESCRIPTION
-0bc2e5dc953d01c9da595aef7dca8a12 *NAMESPACE
-5ed1aef8bd6b2b2dec4c491a696bbea2 *NEWS.md
+b56c0384327ffce8b521b3d7fe2d1e2c *DESCRIPTION
+bfa8fa3c6e4e7e2ce81b9a22d705189c *NAMESPACE
+a4c68f3b2ec87b086789e54d7a95e097 *NEWS.md
 e82628db086b56ab0dddef1fcf61f407 *R/RcppExports.R
 ecd21d3a30ec05541ecab49bb29e1706 *R/aaa.R
 68552d91b7eef1a542689704f88372f3 *R/band-pass.R
@@ -235,7 +235,7 @@ fb38f595dc1cbb4722b2ea4957413da9 *src/threads.cpp
 e5f530e4bdb7ce313584df21077cda5c *src/utils.cpp
 d853f168a236cfd7c9c957d7e5f7d850 *src/utils.h
 c3f87000281236d66007de9112a29c34 *src/vcgCollision.cpp
-5759023969760b0ab0a4f3ffaa593e33 *src/vcgCommon.cpp
+b0b3128149224c8781fedc7fedb287ef *src/vcgCommon.cpp
 a76fc7583070374f9af2fc55564315dc *src/vcgCommon.h
 84dcc94da3adb52b53ae4fa38fe49e5d *src/vcglib/LICENSE.txt
 eae2c83ab96cf8b47f7a1a5ba57df951 *src/vcglib/README.md
@@ -247,7 +247,7 @@ eae2c83ab96cf8b47f7a1a5ba57df951 *src/vcglib/README.md
 82b28b8c960cf8bba76c45895d4837f7 *src/vcglib/vcg/complex/algorithms/bitquad_creation.h
 82d48d4caab8ff02d304874caac50f81 *src/vcglib/vcg/complex/algorithms/bitquad_optimization.h
 d8e126d61d145617d82eb2f1209e930e *src/vcglib/vcg/complex/algorithms/bitquad_support.h
-3ab72f4e4c68d7cd905aabce7b3cafcf *src/vcglib/vcg/complex/algorithms/clean.h
+cca204ced611a116f981d8789f103ad2 *src/vcglib/vcg/complex/algorithms/clean.h
 e8eeaa61b768c30d7d92622e5b4ef737 *src/vcglib/vcg/complex/algorithms/clip.h
 d000c641d907e878ffe59c98707dfb9a *src/vcglib/vcg/complex/algorithms/closest.h
 4e1ef30bd211e39c0b3c3283f6db10b9 *src/vcglib/vcg/complex/algorithms/clustering.h
@@ -349,7 +349,7 @@ b0572e2735cdfde34164886672bcdbd5 *src/vcglib/vcg/complex/exception.h
 7fd7e78797a9aa021bbf486aab1991af *src/vcglib/vcg/complex/foreach.h
 864c81ea69d8a69c95e9183361331c1f *src/vcglib/vcg/complex/used_types.h
 dee9c45a18bc6ae45962e17a37413ac7 *src/vcglib/vcg/connectors/halfedge_pos.h
-87f2329eed4775a8a22cc938964e3fa4 *src/vcglib/vcg/connectors/hedge.h
+bfeedd85c6549e82c1e4a87f43318039 *src/vcglib/vcg/connectors/hedge.h
 6a371c028a9bea0fca2123089c5b4b23 *src/vcglib/vcg/connectors/hedge_component.h
 6ac5a2b88157b19cc64b238a5cc938bc *src/vcglib/vcg/container/container_allocation_table.h
 f7aad87736e7b7ada98b3b10c7338669 *src/vcglib/vcg/container/derivation_chain.h
@@ -381,12 +381,12 @@ cae0fb7fe449f6ab216b94ffe1ffa975 *src/vcglib/vcg/math/shot.ipp
 ec2c4981cb0507c1669b12f50b9b904d *src/vcglib/vcg/math/similarity.h
 4b9e099dd2642ef97d377d19347dedf1 *src/vcglib/vcg/math/similarity2.h
 58423eb6ca5b4b46b233f6fa3db03fc8 *src/vcglib/vcg/math/spherical_harmonics.h
-99ed7246d4a96139de77dbe69cbb3119 *src/vcglib/vcg/simplex/edge/base.h
+53b88c35b233b8f1b18522d97505c2c3 *src/vcglib/vcg/simplex/edge/base.h
 050a02cacd7eaf7c7bc5e54f1c3c79d5 *src/vcglib/vcg/simplex/edge/component.h
 7304f8dcd0b6e20e22e846771714beec *src/vcglib/vcg/simplex/edge/distance.h
 ca23d1f4b969931d57fb6c755fb2b5a9 *src/vcglib/vcg/simplex/edge/pos.h
 ed20fd7b472a5f15427640359cbaa97e *src/vcglib/vcg/simplex/edge/topology.h
-a9c125d06185405a2f5b323c78a2f2dc *src/vcglib/vcg/simplex/face/base.h
+44f7c2c235bf6d5e98f030346353974c *src/vcglib/vcg/simplex/face/base.h
 52f1ba5d1b0270eda64079ec95e9d171 *src/vcglib/vcg/simplex/face/component.h
 f334027cc5b4f72e56c9fc7acd363f24 *src/vcglib/vcg/simplex/face/component_ep.h
 1a37212aefddf446a6b98731263db875 *src/vcglib/vcg/simplex/face/component_occ.h
@@ -396,12 +396,12 @@ f334027cc5b4f72e56c9fc7acd363f24 *src/vcglib/vcg/simplex/face/component_ep.h
 50f760711ad0ee58be5abe259d75a660 *src/vcglib/vcg/simplex/face/jumping_pos.h
 581a56981c2794310f9f2d334c4cea8d *src/vcglib/vcg/simplex/face/pos.h
 7bc95c88bbf08cec35f50cc542205979 *src/vcglib/vcg/simplex/face/topology.h
-b50d051ee3c342b3e982e579af23f2e6 *src/vcglib/vcg/simplex/tetrahedron/base.h
+378a6c2529d1009b64c1271a8da463d6 *src/vcglib/vcg/simplex/tetrahedron/base.h
 4ff360ffddd0ed598234144ff475461d *src/vcglib/vcg/simplex/tetrahedron/component.h
 edeb4291885d06aaa645fbdd36412821 *src/vcglib/vcg/simplex/tetrahedron/pos.h
 6f86482af889775161d169f41bc134c3 *src/vcglib/vcg/simplex/tetrahedron/tetrahedron.h
 d38eb2707e2e7c00aebbf904aac87eb6 *src/vcglib/vcg/simplex/tetrahedron/topology.h
-54baafbebdcc1a7725335b1b31a188a8 *src/vcglib/vcg/simplex/vertex/base.h
+1b2b564f9e5bfc72a919d06c5b756e4b *src/vcglib/vcg/simplex/vertex/base.h
 d289c97b3aa8091c7690ee694c87a9f0 *src/vcglib/vcg/simplex/vertex/component.h
 edad59fe3088c53093fb5562e3ec701c *src/vcglib/vcg/simplex/vertex/component_occ.h
 3fb28f278be0a26600f6cfc2eabf242c *src/vcglib/vcg/simplex/vertex/component_ocf.h
@@ -501,7 +501,7 @@ f42a1c6a36e57f17df089b6874eaf607 *tests/testthat/test-firls-fast-path.R
 a154a3e4de7ecab66a13228b5c025e1c *tests/testthat/test-resample3D.R
 0727c15db1021ff11fecc352ec72569b *tests/testthat/test-shiftarray.R
 3e8a0db79095efbb2adafc0bf612ac98 *tests/testthat/test-vcg-collision.R
-db716755df2d3885e3f0a61d84833caa *tests/testthat/test-vcg-mesh-io.R
+f103b385e612fa625ca132b299b5dd39 *tests/testthat/test-vcg-mesh-io.R
 bf3efed2b6e2bc9f282ba64e46b73824 *tests/testthat/test-vcg-new.R
 7cc4b63c172391f9d5c1d92c38efc086 *tests/testthat/test-vcg.R
 f8bad6d8284cdc2dafaf9d5aa0d2ce19 *tests/testthat/test-vector3.R
