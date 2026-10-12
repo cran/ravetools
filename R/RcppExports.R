@@ -565,6 +565,34 @@ Vector3__set_from_matrix_scale <- function(self, m) {
     invisible(.Call(`_ravetools_Vector3__set_from_matrix_scale`, self, m))
 }
 
+n4_truncate_quantiles <- function(x, lower, upper, bins) {
+    .Call(`_ravetools_n4_truncate_quantiles`, x, lower, upper, bins)
+}
+
+n4_mask_morph <- function(mask, dims, radius, erode) {
+    .Call(`_ravetools_n4_mask_morph`, mask, dims, radius, erode)
+}
+
+n4_mask_cleanup <- function(mask, dims, radius, keep_largest, min_size) {
+    .Call(`_ravetools_n4_mask_cleanup`, mask, dims, radius, keep_largest, min_size)
+}
+
+n4_bspline_evaluate <- function(lattice, ldims, order, grid) {
+    .Call(`_ravetools_n4_bspline_evaluate`, lattice, ldims, order, grid)
+}
+
+n4_bspline_refine <- function(lattice, ldims, order) {
+    .Call(`_ravetools_n4_bspline_refine`, lattice, ldims, order)
+}
+
+n4_bias_field <- function(x, dims, mask, weight, spacing, shrink, iterations, tol, spline_distance, order, bins, fwhm, noise, verbose) {
+    .Call(`_ravetools_n4_bias_field`, x, dims, mask, weight, spacing, shrink, iterations, tol, spline_distance, order, bins, fwhm, noise, verbose)
+}
+
+segment_gmm_mrf_cpp <- function(volume, dims, mask, priors, n_classes, prior_weight, mrf_beta, mrf_radius, direction, iterations, tolerance, verbose) {
+    .Call(`_ravetools_segment_gmm_mrf_cpp`, volume, dims, mask, priors, n_classes, prior_weight, mrf_beta, mrf_radius, direction, iterations, tolerance, verbose)
+}
+
 mrisSmooth <- function(vb_, it_, niterations = 10L, npasses = 1L, rescale = FALSE, verbose = FALSE) {
     .Call(`_ravetools_mrisSmooth`, vb_, it_, niterations, npasses, rescale, verbose)
 }
@@ -625,6 +653,18 @@ rawToString <- function(x) {
     .Call(`_ravetools_rawToString`, x)
 }
 
+apply_transform3d_volume_cpp <- function(volume, volumeDim, volumeVox2Ras, referenceDim, referenceVox2Ras, chain, interpolation, naFill) {
+    .Call(`_ravetools_apply_transform3d_volume_cpp`, volume, volumeDim, volumeVox2Ras, referenceDim, referenceVox2Ras, chain, interpolation, naFill)
+}
+
+apply_transform3d_points_cpp <- function(points, chain) {
+    .Call(`_ravetools_apply_transform3d_points_cpp`, points, chain)
+}
+
+invert_displacement_field_cpp <- function(field, dim, vox2ras, maxIterations, meanTolerance, maxTolerance) {
+    .Call(`_ravetools_invert_displacement_field_cpp`, field, dim, vox2ras, maxIterations, meanTolerance, maxTolerance)
+}
+
 register_linear_cpp <- function(fixed, fixedDim, fixedVox2Ras, moving, movingDim, movingVox2Ras, type, metric, shrinkFactors, smoothingSigmas, iterations, samplingRate, learningRate, numberOfBins, seed, initTransform, fixedMask, movingMask, verbose = FALSE) {
     .Call(`_ravetools_register_linear_cpp`, fixed, fixedDim, fixedVox2Ras, moving, movingDim, movingVox2Ras, type, metric, shrinkFactors, smoothingSigmas, iterations, samplingRate, learningRate, numberOfBins, seed, initTransform, fixedMask, movingMask, verbose)
 }
@@ -653,8 +693,8 @@ vcgIsoSurface <- function(array_, thresh) {
     .Call(`_ravetools_vcgIsoSurface`, array_, thresh)
 }
 
-vcgSmoothImplicit <- function(vb_, it_, lambda_, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight_, SmoothQ) {
-    .Call(`_ravetools_vcgSmoothImplicit`, vb_, it_, lambda_, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight_, SmoothQ)
+vcgSmoothImplicit <- function(vb_, it_, lambda, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight, SmoothQ, maxMemory) {
+    .Call(`_ravetools_vcgSmoothImplicit`, vb_, it_, lambda, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight, SmoothQ, maxMemory)
 }
 
 vcgSmooth <- function(vb_, it_, iter, method, lambda, mu, delta_) {
@@ -719,6 +759,10 @@ vcgMeshPatchFaces <- function(vb_, it_, boundary_seq, seed_face) {
 
 vcgFixDefects <- function(vb_, it_, merge_tolerance = -1.0, max_hole_size = 100L, verbose = FALSE) {
     .Call(`_ravetools_vcgFixDefects`, vb_, it_, merge_tolerance, max_hole_size, verbose)
+}
+
+vcgDecimate <- function(vb_, it_, targetFaces, preserveTopology, preserveBoundary, normalCheck, qualityThreshold, verbose) {
+    .Call(`_ravetools_vcgDecimate`, vb_, it_, targetFaces, preserveTopology, preserveBoundary, normalCheck, qualityThreshold, verbose)
 }
 
 # Register entry points for exported C++ functions

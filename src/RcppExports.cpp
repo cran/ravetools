@@ -3415,6 +3415,122 @@ RcppExport SEXP _ravetools_Vector3__set_from_matrix_scale(SEXP selfSEXP, SEXP mS
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// n4_truncate_quantiles
+Rcpp::NumericVector n4_truncate_quantiles(const Rcpp::NumericVector& x, double lower, double upper, int bins);
+RcppExport SEXP _ravetools_n4_truncate_quantiles(SEXP xSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP binsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< double >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< int >::type bins(binsSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_truncate_quantiles(x, lower, upper, bins));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_mask_morph
+Rcpp::LogicalVector n4_mask_morph(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims, int radius, bool erode);
+RcppExport SEXP _ravetools_n4_mask_morph(SEXP maskSEXP, SEXP dimsSEXP, SEXP radiusSEXP, SEXP erodeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    Rcpp::traits::input_parameter< int >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< bool >::type erode(erodeSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_mask_morph(mask, dims, radius, erode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_mask_cleanup
+Rcpp::LogicalVector n4_mask_cleanup(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims, int radius, bool keep_largest, int min_size);
+RcppExport SEXP _ravetools_n4_mask_cleanup(SEXP maskSEXP, SEXP dimsSEXP, SEXP radiusSEXP, SEXP keep_largestSEXP, SEXP min_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    Rcpp::traits::input_parameter< int >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< bool >::type keep_largest(keep_largestSEXP);
+    Rcpp::traits::input_parameter< int >::type min_size(min_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_mask_cleanup(mask, dims, radius, keep_largest, min_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_bspline_evaluate
+Rcpp::NumericVector n4_bspline_evaluate(const Rcpp::NumericVector& lattice, const Rcpp::IntegerVector& ldims, int order, const Rcpp::IntegerVector& grid);
+RcppExport SEXP _ravetools_n4_bspline_evaluate(SEXP latticeSEXP, SEXP ldimsSEXP, SEXP orderSEXP, SEXP gridSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type lattice(latticeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type ldims(ldimsSEXP);
+    Rcpp::traits::input_parameter< int >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type grid(gridSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_bspline_evaluate(lattice, ldims, order, grid));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_bspline_refine
+Rcpp::NumericVector n4_bspline_refine(const Rcpp::NumericVector& lattice, const Rcpp::IntegerVector& ldims, int order);
+RcppExport SEXP _ravetools_n4_bspline_refine(SEXP latticeSEXP, SEXP ldimsSEXP, SEXP orderSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type lattice(latticeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type ldims(ldimsSEXP);
+    Rcpp::traits::input_parameter< int >::type order(orderSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_bspline_refine(lattice, ldims, order));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_bias_field
+Rcpp::List n4_bias_field(const Rcpp::NumericVector& x, const Rcpp::IntegerVector& dims, const Rcpp::LogicalVector& mask, const Rcpp::NumericVector& weight, const Rcpp::NumericVector& spacing, int shrink, const Rcpp::IntegerVector& iterations, double tol, const Rcpp::NumericVector& spline_distance, int order, int bins, double fwhm, double noise, bool verbose);
+RcppExport SEXP _ravetools_n4_bias_field(SEXP xSEXP, SEXP dimsSEXP, SEXP maskSEXP, SEXP weightSEXP, SEXP spacingSEXP, SEXP shrinkSEXP, SEXP iterationsSEXP, SEXP tolSEXP, SEXP spline_distanceSEXP, SEXP orderSEXP, SEXP binsSEXP, SEXP fwhmSEXP, SEXP noiseSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type spacing(spacingSEXP);
+    Rcpp::traits::input_parameter< int >::type shrink(shrinkSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type iterations(iterationsSEXP);
+    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type spline_distance(spline_distanceSEXP);
+    Rcpp::traits::input_parameter< int >::type order(orderSEXP);
+    Rcpp::traits::input_parameter< int >::type bins(binsSEXP);
+    Rcpp::traits::input_parameter< double >::type fwhm(fwhmSEXP);
+    Rcpp::traits::input_parameter< double >::type noise(noiseSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_bias_field(x, dims, mask, weight, spacing, shrink, iterations, tol, spline_distance, order, bins, fwhm, noise, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// segment_gmm_mrf_cpp
+Rcpp::List segment_gmm_mrf_cpp(const Rcpp::NumericVector& volume, const Rcpp::IntegerVector& dims, const Rcpp::LogicalVector& mask, const Rcpp::List& priors, int n_classes, double prior_weight, double mrf_beta, const Rcpp::IntegerVector& mrf_radius, const Rcpp::NumericMatrix& direction, int iterations, double tolerance, bool verbose);
+RcppExport SEXP _ravetools_segment_gmm_mrf_cpp(SEXP volumeSEXP, SEXP dimsSEXP, SEXP maskSEXP, SEXP priorsSEXP, SEXP n_classesSEXP, SEXP prior_weightSEXP, SEXP mrf_betaSEXP, SEXP mrf_radiusSEXP, SEXP directionSEXP, SEXP iterationsSEXP, SEXP toleranceSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type volume(volumeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type priors(priorsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_classes(n_classesSEXP);
+    Rcpp::traits::input_parameter< double >::type prior_weight(prior_weightSEXP);
+    Rcpp::traits::input_parameter< double >::type mrf_beta(mrf_betaSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type mrf_radius(mrf_radiusSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type direction(directionSEXP);
+    Rcpp::traits::input_parameter< int >::type iterations(iterationsSEXP);
+    Rcpp::traits::input_parameter< double >::type tolerance(toleranceSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(segment_gmm_mrf_cpp(volume, dims, mask, priors, n_classes, prior_weight, mrf_beta, mrf_radius, direction, iterations, tolerance, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mrisSmooth
 Rcpp::List mrisSmooth(SEXP vb_, SEXP it_, int niterations, int npasses, bool rescale, bool verbose);
 RcppExport SEXP _ravetools_mrisSmooth(SEXP vb_SEXP, SEXP it_SEXP, SEXP niterationsSEXP, SEXP npassesSEXP, SEXP rescaleSEXP, SEXP verboseSEXP) {
@@ -3626,6 +3742,52 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// apply_transform3d_volume_cpp
+Rcpp::NumericVector apply_transform3d_volume_cpp(const Rcpp::NumericVector& volume, const Rcpp::IntegerVector& volumeDim, const Rcpp::NumericMatrix& volumeVox2Ras, const Rcpp::IntegerVector& referenceDim, const Rcpp::NumericMatrix& referenceVox2Ras, const Rcpp::List& chain, const int interpolation, const double naFill);
+RcppExport SEXP _ravetools_apply_transform3d_volume_cpp(SEXP volumeSEXP, SEXP volumeDimSEXP, SEXP volumeVox2RasSEXP, SEXP referenceDimSEXP, SEXP referenceVox2RasSEXP, SEXP chainSEXP, SEXP interpolationSEXP, SEXP naFillSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type volume(volumeSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type volumeDim(volumeDimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type volumeVox2Ras(volumeVox2RasSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type referenceDim(referenceDimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type referenceVox2Ras(referenceVox2RasSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type chain(chainSEXP);
+    Rcpp::traits::input_parameter< const int >::type interpolation(interpolationSEXP);
+    Rcpp::traits::input_parameter< const double >::type naFill(naFillSEXP);
+    rcpp_result_gen = Rcpp::wrap(apply_transform3d_volume_cpp(volume, volumeDim, volumeVox2Ras, referenceDim, referenceVox2Ras, chain, interpolation, naFill));
+    return rcpp_result_gen;
+END_RCPP
+}
+// apply_transform3d_points_cpp
+Rcpp::NumericMatrix apply_transform3d_points_cpp(const Rcpp::NumericMatrix& points, const Rcpp::List& chain);
+RcppExport SEXP _ravetools_apply_transform3d_points_cpp(SEXP pointsSEXP, SEXP chainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type points(pointsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type chain(chainSEXP);
+    rcpp_result_gen = Rcpp::wrap(apply_transform3d_points_cpp(points, chain));
+    return rcpp_result_gen;
+END_RCPP
+}
+// invert_displacement_field_cpp
+Rcpp::List invert_displacement_field_cpp(const Rcpp::NumericVector& field, const Rcpp::IntegerVector& dim, const Rcpp::NumericMatrix& vox2ras, const int maxIterations, const double meanTolerance, const double maxTolerance);
+RcppExport SEXP _ravetools_invert_displacement_field_cpp(SEXP fieldSEXP, SEXP dimSEXP, SEXP vox2rasSEXP, SEXP maxIterationsSEXP, SEXP meanToleranceSEXP, SEXP maxToleranceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type field(fieldSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type vox2ras(vox2rasSEXP);
+    Rcpp::traits::input_parameter< const int >::type maxIterations(maxIterationsSEXP);
+    Rcpp::traits::input_parameter< const double >::type meanTolerance(meanToleranceSEXP);
+    Rcpp::traits::input_parameter< const double >::type maxTolerance(maxToleranceSEXP);
+    rcpp_result_gen = Rcpp::wrap(invert_displacement_field_cpp(field, dim, vox2ras, maxIterations, meanTolerance, maxTolerance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // register_linear_cpp
 Rcpp::List register_linear_cpp(const Rcpp::NumericVector& fixed, const Rcpp::IntegerVector& fixedDim, const Rcpp::NumericMatrix& fixedVox2Ras, const Rcpp::NumericVector& moving, const Rcpp::IntegerVector& movingDim, const Rcpp::NumericMatrix& movingVox2Ras, const std::string& type, const std::string& metric, const Rcpp::IntegerVector& shrinkFactors, const Rcpp::NumericVector& smoothingSigmas, const Rcpp::IntegerVector& iterations, const double samplingRate, const double learningRate, const int numberOfBins, const unsigned int seed, const Rcpp::Nullable<Rcpp::NumericMatrix>& initTransform, const Rcpp::Nullable<Rcpp::NumericVector>& fixedMask, const Rcpp::Nullable<Rcpp::NumericVector>& movingMask, const bool verbose);
 RcppExport SEXP _ravetools_register_linear_cpp(SEXP fixedSEXP, SEXP fixedDimSEXP, SEXP fixedVox2RasSEXP, SEXP movingSEXP, SEXP movingDimSEXP, SEXP movingVox2RasSEXP, SEXP typeSEXP, SEXP metricSEXP, SEXP shrinkFactorsSEXP, SEXP smoothingSigmasSEXP, SEXP iterationsSEXP, SEXP samplingRateSEXP, SEXP learningRateSEXP, SEXP numberOfBinsSEXP, SEXP seedSEXP, SEXP initTransformSEXP, SEXP fixedMaskSEXP, SEXP movingMaskSEXP, SEXP verboseSEXP) {
@@ -3760,21 +3922,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // vcgSmoothImplicit
-SEXP vcgSmoothImplicit(SEXP vb_, SEXP it_, float lambda_, bool useMassMatrix, bool fixBorder, bool useCotWeight, int degree, float lapWeight_, bool SmoothQ);
-RcppExport SEXP _ravetools_vcgSmoothImplicit(SEXP vb_SEXP, SEXP it_SEXP, SEXP lambda_SEXP, SEXP useMassMatrixSEXP, SEXP fixBorderSEXP, SEXP useCotWeightSEXP, SEXP degreeSEXP, SEXP lapWeight_SEXP, SEXP SmoothQSEXP) {
+SEXP vcgSmoothImplicit(SEXP vb_, SEXP it_, double lambda, bool useMassMatrix, bool fixBorder, bool useCotWeight, int degree, double lapWeight, bool SmoothQ, double maxMemory);
+RcppExport SEXP _ravetools_vcgSmoothImplicit(SEXP vb_SEXP, SEXP it_SEXP, SEXP lambdaSEXP, SEXP useMassMatrixSEXP, SEXP fixBorderSEXP, SEXP useCotWeightSEXP, SEXP degreeSEXP, SEXP lapWeightSEXP, SEXP SmoothQSEXP, SEXP maxMemorySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type vb_(vb_SEXP);
     Rcpp::traits::input_parameter< SEXP >::type it_(it_SEXP);
-    Rcpp::traits::input_parameter< float >::type lambda_(lambda_SEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< bool >::type useMassMatrix(useMassMatrixSEXP);
     Rcpp::traits::input_parameter< bool >::type fixBorder(fixBorderSEXP);
     Rcpp::traits::input_parameter< bool >::type useCotWeight(useCotWeightSEXP);
     Rcpp::traits::input_parameter< int >::type degree(degreeSEXP);
-    Rcpp::traits::input_parameter< float >::type lapWeight_(lapWeight_SEXP);
+    Rcpp::traits::input_parameter< double >::type lapWeight(lapWeightSEXP);
     Rcpp::traits::input_parameter< bool >::type SmoothQ(SmoothQSEXP);
-    rcpp_result_gen = Rcpp::wrap(vcgSmoothImplicit(vb_, it_, lambda_, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight_, SmoothQ));
+    Rcpp::traits::input_parameter< double >::type maxMemory(maxMemorySEXP);
+    rcpp_result_gen = Rcpp::wrap(vcgSmoothImplicit(vb_, it_, lambda, useMassMatrix, fixBorder, useCotWeight, degree, lapWeight, SmoothQ, maxMemory));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3999,6 +4162,24 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_hole_size(max_hole_sizeSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(vcgFixDefects(vb_, it_, merge_tolerance, max_hole_size, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vcgDecimate
+Rcpp::List vcgDecimate(SEXP vb_, SEXP it_, int targetFaces, bool preserveTopology, bool preserveBoundary, bool normalCheck, double qualityThreshold, bool verbose);
+RcppExport SEXP _ravetools_vcgDecimate(SEXP vb_SEXP, SEXP it_SEXP, SEXP targetFacesSEXP, SEXP preserveTopologySEXP, SEXP preserveBoundarySEXP, SEXP normalCheckSEXP, SEXP qualityThresholdSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vb_(vb_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type it_(it_SEXP);
+    Rcpp::traits::input_parameter< int >::type targetFaces(targetFacesSEXP);
+    Rcpp::traits::input_parameter< bool >::type preserveTopology(preserveTopologySEXP);
+    Rcpp::traits::input_parameter< bool >::type preserveBoundary(preserveBoundarySEXP);
+    Rcpp::traits::input_parameter< bool >::type normalCheck(normalCheckSEXP);
+    Rcpp::traits::input_parameter< double >::type qualityThreshold(qualityThresholdSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(vcgDecimate(vb_, it_, targetFaces, preserveTopology, preserveBoundary, normalCheck, qualityThreshold, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4310,6 +4491,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_Vector3__set_from_spherical_coords", (DL_FUNC) &_ravetools_Vector3__set_from_spherical_coords, 4},
     {"_ravetools_Vector3__set_from_matrix_position", (DL_FUNC) &_ravetools_Vector3__set_from_matrix_position, 2},
     {"_ravetools_Vector3__set_from_matrix_scale", (DL_FUNC) &_ravetools_Vector3__set_from_matrix_scale, 2},
+    {"_ravetools_n4_truncate_quantiles", (DL_FUNC) &_ravetools_n4_truncate_quantiles, 4},
+    {"_ravetools_n4_mask_morph", (DL_FUNC) &_ravetools_n4_mask_morph, 4},
+    {"_ravetools_n4_mask_cleanup", (DL_FUNC) &_ravetools_n4_mask_cleanup, 5},
+    {"_ravetools_n4_bspline_evaluate", (DL_FUNC) &_ravetools_n4_bspline_evaluate, 4},
+    {"_ravetools_n4_bspline_refine", (DL_FUNC) &_ravetools_n4_bspline_refine, 3},
+    {"_ravetools_n4_bias_field", (DL_FUNC) &_ravetools_n4_bias_field, 14},
+    {"_ravetools_segment_gmm_mrf_cpp", (DL_FUNC) &_ravetools_segment_gmm_mrf_cpp, 12},
     {"_ravetools_mrisSmooth", (DL_FUNC) &_ravetools_mrisSmooth, 6},
     {"_ravetools_mrisInflate", (DL_FUNC) &_ravetools_mrisInflate, 11},
     {"_ravetools_mrisSphere", (DL_FUNC) &_ravetools_mrisSphere, 10},
@@ -4325,6 +4513,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_rawToInt64", (DL_FUNC) &_ravetools_rawToInt64, 1},
     {"_ravetools_rawToFloat", (DL_FUNC) &_ravetools_rawToFloat, 1},
     {"_ravetools_rawToString", (DL_FUNC) &_ravetools_rawToString, 1},
+    {"_ravetools_apply_transform3d_volume_cpp", (DL_FUNC) &_ravetools_apply_transform3d_volume_cpp, 8},
+    {"_ravetools_apply_transform3d_points_cpp", (DL_FUNC) &_ravetools_apply_transform3d_points_cpp, 2},
+    {"_ravetools_invert_displacement_field_cpp", (DL_FUNC) &_ravetools_invert_displacement_field_cpp, 6},
     {"_ravetools_register_linear_cpp", (DL_FUNC) &_ravetools_register_linear_cpp, 19},
     {"_ravetools_register_syn_cpp", (DL_FUNC) &_ravetools_register_syn_cpp, 23},
     {"_ravetools_resample3D", (DL_FUNC) &_ravetools_resample3D, 6},
@@ -4332,7 +4523,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_getDefaultNumThreads", (DL_FUNC) &_ravetools_getDefaultNumThreads, 0},
     {"_ravetools_vcgDetectCollision", (DL_FUNC) &_ravetools_vcgDetectCollision, 9},
     {"_ravetools_vcgIsoSurface", (DL_FUNC) &_ravetools_vcgIsoSurface, 2},
-    {"_ravetools_vcgSmoothImplicit", (DL_FUNC) &_ravetools_vcgSmoothImplicit, 9},
+    {"_ravetools_vcgSmoothImplicit", (DL_FUNC) &_ravetools_vcgSmoothImplicit, 10},
     {"_ravetools_vcgSmooth", (DL_FUNC) &_ravetools_vcgSmooth, 7},
     {"_ravetools_vcgUniformResample", (DL_FUNC) &_ravetools_vcgUniformResample, 9},
     {"_ravetools_vcgUpdateNormals", (DL_FUNC) &_ravetools_vcgUpdateNormals, 5},
@@ -4349,6 +4540,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_vcgMaxEdgeLength", (DL_FUNC) &_ravetools_vcgMaxEdgeLength, 2},
     {"_ravetools_vcgMeshPatchFaces", (DL_FUNC) &_ravetools_vcgMeshPatchFaces, 4},
     {"_ravetools_vcgFixDefects", (DL_FUNC) &_ravetools_vcgFixDefects, 5},
+    {"_ravetools_vcgDecimate", (DL_FUNC) &_ravetools_vcgDecimate, 8},
     {"_ravetools_RcppExport_registerCCallable", (DL_FUNC) &_ravetools_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };
