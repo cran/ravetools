@@ -3430,14 +3430,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // n4_mask_morph
-Rcpp::LogicalVector n4_mask_morph(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims, int radius, bool erode);
+Rcpp::LogicalVector n4_mask_morph(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims, const Rcpp::IntegerVector& radius, bool erode);
 RcppExport SEXP _ravetools_n4_mask_morph(SEXP maskSEXP, SEXP dimsSEXP, SEXP radiusSEXP, SEXP erodeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
-    Rcpp::traits::input_parameter< int >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type radius(radiusSEXP);
     Rcpp::traits::input_parameter< bool >::type erode(erodeSEXP);
     rcpp_result_gen = Rcpp::wrap(n4_mask_morph(mask, dims, radius, erode));
     return rcpp_result_gen;
@@ -3455,6 +3455,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type keep_largest(keep_largestSEXP);
     Rcpp::traits::input_parameter< int >::type min_size(min_sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(n4_mask_cleanup(mask, dims, radius, keep_largest, min_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n4_mask_largest_component
+Rcpp::LogicalVector n4_mask_largest_component(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims);
+RcppExport SEXP _ravetools_n4_mask_largest_component(SEXP maskSEXP, SEXP dimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(n4_mask_largest_component(mask, dims));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3643,6 +3655,57 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mrisFillInteriorParity
+Rcpp::LogicalVector mrisFillInteriorParity(const Rcpp::NumericMatrix& vb_, const Rcpp::IntegerMatrix& it_, const Rcpp::IntegerVector& dims);
+RcppExport SEXP _ravetools_mrisFillInteriorParity(SEXP vb_SEXP, SEXP it_SEXP, SEXP dimsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type vb_(vb_SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type it_(it_SEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    rcpp_result_gen = Rcpp::wrap(mrisFillInteriorParity(vb_, it_, dims));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mrisCloseBinary
+Rcpp::LogicalVector mrisCloseBinary(const Rcpp::LogicalVector& mask, const Rcpp::IntegerVector& dims, double radius, int slice_axis);
+RcppExport SEXP _ravetools_mrisCloseBinary(SEXP maskSEXP, SEXP dimsSEXP, SEXP radiusSEXP, SEXP slice_axisSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::LogicalVector& >::type mask(maskSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type dims(dimsSEXP);
+    Rcpp::traits::input_parameter< double >::type radius(radiusSEXP);
+    Rcpp::traits::input_parameter< int >::type slice_axis(slice_axisSEXP);
+    rcpp_result_gen = Rcpp::wrap(mrisCloseBinary(mask, dims, radius, slice_axis));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mrisLargestComponent
+Rcpp::List mrisLargestComponent(const Rcpp::IntegerMatrix& it_, int nv);
+RcppExport SEXP _ravetools_mrisLargestComponent(SEXP it_SEXP, SEXP nvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerMatrix& >::type it_(it_SEXP);
+    Rcpp::traits::input_parameter< int >::type nv(nvSEXP);
+    rcpp_result_gen = Rcpp::wrap(mrisLargestComponent(it_, nv));
+    return rcpp_result_gen;
+END_RCPP
+}
+// quickhull3dConvexHull
+Rcpp::IntegerMatrix quickhull3dConvexHull(const Rcpp::NumericMatrix& vb, double tolerance);
+RcppExport SEXP _ravetools_quickhull3dConvexHull(SEXP vbSEXP, SEXP toleranceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type vb(vbSEXP);
+    Rcpp::traits::input_parameter< double >::type tolerance(toleranceSEXP);
+    rcpp_result_gen = Rcpp::wrap(quickhull3dConvexHull(vb, tolerance));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rawToUInt8
 SEXP rawToUInt8(SEXP x);
 RcppExport SEXP _ravetools_rawToUInt8(SEXP xSEXP) {
@@ -3818,8 +3881,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // register_syn_cpp
-Rcpp::List register_syn_cpp(const Rcpp::List& fixedList, const Rcpp::IntegerVector& fixedDim, const Rcpp::NumericMatrix& fixedVox2Ras, const Rcpp::List& movingList, const Rcpp::IntegerVector& movingDim, const Rcpp::NumericMatrix& movingVox2Ras, const Rcpp::NumericMatrix& affineTransform, const Rcpp::CharacterVector& metricNames, const Rcpp::NumericVector& weights, const Rcpp::IntegerVector& shrinkFactors, const Rcpp::NumericVector& smoothingSigmas, const Rcpp::IntegerVector& iterations, const double gradStep, const Rcpp::NumericVector& flowSigma, const double totalSigma, const int ccRadius, const Rcpp::IntegerVector& interpCodes, const Rcpp::Nullable<Rcpp::NumericVector>& fixedMask, const Rcpp::Nullable<Rcpp::NumericVector>& movingMask, const Rcpp::NumericMatrix& fixedPoints, const Rcpp::NumericMatrix& movingPoints, const double pointsWeight, const bool verbose);
-RcppExport SEXP _ravetools_register_syn_cpp(SEXP fixedListSEXP, SEXP fixedDimSEXP, SEXP fixedVox2RasSEXP, SEXP movingListSEXP, SEXP movingDimSEXP, SEXP movingVox2RasSEXP, SEXP affineTransformSEXP, SEXP metricNamesSEXP, SEXP weightsSEXP, SEXP shrinkFactorsSEXP, SEXP smoothingSigmasSEXP, SEXP iterationsSEXP, SEXP gradStepSEXP, SEXP flowSigmaSEXP, SEXP totalSigmaSEXP, SEXP ccRadiusSEXP, SEXP interpCodesSEXP, SEXP fixedMaskSEXP, SEXP movingMaskSEXP, SEXP fixedPointsSEXP, SEXP movingPointsSEXP, SEXP pointsWeightSEXP, SEXP verboseSEXP) {
+Rcpp::List register_syn_cpp(const Rcpp::List& fixedList, const Rcpp::IntegerVector& fixedDim, const Rcpp::NumericMatrix& fixedVox2Ras, const Rcpp::List& movingList, const Rcpp::IntegerVector& movingDim, const Rcpp::NumericMatrix& movingVox2Ras, const Rcpp::NumericMatrix& affineTransform, const Rcpp::CharacterVector& metricNames, const Rcpp::NumericVector& weights, const Rcpp::IntegerVector& shrinkFactors, const Rcpp::NumericVector& smoothingSigmas, const Rcpp::IntegerVector& iterations, const double gradStep, const Rcpp::NumericVector& flowSigma, const double totalSigma, const int ccRadius, const Rcpp::IntegerVector& interpCodes, const Rcpp::Nullable<Rcpp::NumericVector>& fixedMask, const Rcpp::Nullable<Rcpp::NumericVector>& movingMask, const Rcpp::NumericMatrix& fixedPoints, const Rcpp::NumericMatrix& movingPoints, const double pointsWeight, const double convergenceThreshold, const int convergenceWindow, const bool verbose);
+RcppExport SEXP _ravetools_register_syn_cpp(SEXP fixedListSEXP, SEXP fixedDimSEXP, SEXP fixedVox2RasSEXP, SEXP movingListSEXP, SEXP movingDimSEXP, SEXP movingVox2RasSEXP, SEXP affineTransformSEXP, SEXP metricNamesSEXP, SEXP weightsSEXP, SEXP shrinkFactorsSEXP, SEXP smoothingSigmasSEXP, SEXP iterationsSEXP, SEXP gradStepSEXP, SEXP flowSigmaSEXP, SEXP totalSigmaSEXP, SEXP ccRadiusSEXP, SEXP interpCodesSEXP, SEXP fixedMaskSEXP, SEXP movingMaskSEXP, SEXP fixedPointsSEXP, SEXP movingPointsSEXP, SEXP pointsWeightSEXP, SEXP convergenceThresholdSEXP, SEXP convergenceWindowSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3845,8 +3908,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type fixedPoints(fixedPointsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::NumericMatrix& >::type movingPoints(movingPointsSEXP);
     Rcpp::traits::input_parameter< const double >::type pointsWeight(pointsWeightSEXP);
+    Rcpp::traits::input_parameter< const double >::type convergenceThreshold(convergenceThresholdSEXP);
+    Rcpp::traits::input_parameter< const int >::type convergenceWindow(convergenceWindowSEXP);
     Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(register_syn_cpp(fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, verbose));
+    rcpp_result_gen = Rcpp::wrap(register_syn_cpp(fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, convergenceThreshold, convergenceWindow, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// syn_convergence_values_cpp
+Rcpp::NumericVector syn_convergence_values_cpp(const Rcpp::NumericVector& energy, const int window);
+RcppExport SEXP _ravetools_syn_convergence_values_cpp(SEXP energySEXP, SEXP windowSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type energy(energySEXP);
+    Rcpp::traits::input_parameter< const int >::type window(windowSEXP);
+    rcpp_result_gen = Rcpp::wrap(syn_convergence_values_cpp(energy, window));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4162,6 +4239,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type max_hole_size(max_hole_sizeSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     rcpp_result_gen = Rcpp::wrap(vcgFixDefects(vb_, it_, merge_tolerance, max_hole_size, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vcgConvexHull
+Rcpp::IntegerMatrix vcgConvexHull(SEXP vb_, double tolerance);
+RcppExport SEXP _ravetools_vcgConvexHull(SEXP vb_SEXP, SEXP toleranceSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vb_(vb_SEXP);
+    Rcpp::traits::input_parameter< double >::type tolerance(toleranceSEXP);
+    rcpp_result_gen = Rcpp::wrap(vcgConvexHull(vb_, tolerance));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4494,6 +4583,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_n4_truncate_quantiles", (DL_FUNC) &_ravetools_n4_truncate_quantiles, 4},
     {"_ravetools_n4_mask_morph", (DL_FUNC) &_ravetools_n4_mask_morph, 4},
     {"_ravetools_n4_mask_cleanup", (DL_FUNC) &_ravetools_n4_mask_cleanup, 5},
+    {"_ravetools_n4_mask_largest_component", (DL_FUNC) &_ravetools_n4_mask_largest_component, 2},
     {"_ravetools_n4_bspline_evaluate", (DL_FUNC) &_ravetools_n4_bspline_evaluate, 4},
     {"_ravetools_n4_bspline_refine", (DL_FUNC) &_ravetools_n4_bspline_refine, 3},
     {"_ravetools_n4_bias_field", (DL_FUNC) &_ravetools_n4_bias_field, 14},
@@ -4504,6 +4594,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_mrisMakeSurfaces", (DL_FUNC) &_ravetools_mrisMakeSurfaces, 15},
     {"_ravetools_mrisCurvature", (DL_FUNC) &_ravetools_mrisCurvature, 3},
     {"_ravetools_mrisRemesh", (DL_FUNC) &_ravetools_mrisRemesh, 7},
+    {"_ravetools_mrisFillInteriorParity", (DL_FUNC) &_ravetools_mrisFillInteriorParity, 3},
+    {"_ravetools_mrisCloseBinary", (DL_FUNC) &_ravetools_mrisCloseBinary, 4},
+    {"_ravetools_mrisLargestComponent", (DL_FUNC) &_ravetools_mrisLargestComponent, 2},
+    {"_ravetools_quickhull3dConvexHull", (DL_FUNC) &_ravetools_quickhull3dConvexHull, 2},
     {"_ravetools_rawToUInt8", (DL_FUNC) &_ravetools_rawToUInt8, 1},
     {"_ravetools_rawToInt8", (DL_FUNC) &_ravetools_rawToInt8, 1},
     {"_ravetools_rawToUInt16", (DL_FUNC) &_ravetools_rawToUInt16, 1},
@@ -4517,7 +4611,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_apply_transform3d_points_cpp", (DL_FUNC) &_ravetools_apply_transform3d_points_cpp, 2},
     {"_ravetools_invert_displacement_field_cpp", (DL_FUNC) &_ravetools_invert_displacement_field_cpp, 6},
     {"_ravetools_register_linear_cpp", (DL_FUNC) &_ravetools_register_linear_cpp, 19},
-    {"_ravetools_register_syn_cpp", (DL_FUNC) &_ravetools_register_syn_cpp, 23},
+    {"_ravetools_register_syn_cpp", (DL_FUNC) &_ravetools_register_syn_cpp, 25},
+    {"_ravetools_syn_convergence_values_cpp", (DL_FUNC) &_ravetools_syn_convergence_values_cpp, 2},
     {"_ravetools_resample3D", (DL_FUNC) &_ravetools_resample3D, 6},
     {"_ravetools_shiftArray", (DL_FUNC) &_ravetools_shiftArray, 4},
     {"_ravetools_getDefaultNumThreads", (DL_FUNC) &_ravetools_getDefaultNumThreads, 0},
@@ -4540,6 +4635,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ravetools_vcgMaxEdgeLength", (DL_FUNC) &_ravetools_vcgMaxEdgeLength, 2},
     {"_ravetools_vcgMeshPatchFaces", (DL_FUNC) &_ravetools_vcgMeshPatchFaces, 4},
     {"_ravetools_vcgFixDefects", (DL_FUNC) &_ravetools_vcgFixDefects, 5},
+    {"_ravetools_vcgConvexHull", (DL_FUNC) &_ravetools_vcgConvexHull, 2},
     {"_ravetools_vcgDecimate", (DL_FUNC) &_ravetools_vcgDecimate, 8},
     {"_ravetools_RcppExport_registerCCallable", (DL_FUNC) &_ravetools_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}

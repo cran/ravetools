@@ -577,6 +577,10 @@ n4_mask_cleanup <- function(mask, dims, radius, keep_largest, min_size) {
     .Call(`_ravetools_n4_mask_cleanup`, mask, dims, radius, keep_largest, min_size)
 }
 
+n4_mask_largest_component <- function(mask, dims) {
+    .Call(`_ravetools_n4_mask_largest_component`, mask, dims)
+}
+
 n4_bspline_evaluate <- function(lattice, ldims, order, grid) {
     .Call(`_ravetools_n4_bspline_evaluate`, lattice, ldims, order, grid)
 }
@@ -615,6 +619,22 @@ mrisCurvature <- function(vb_, it_, verbose = FALSE) {
 
 mrisRemesh <- function(vb_, it_, target_edge_len, niterations = 5L, n_smooth = 2L, damping = 0.99, verbose = FALSE) {
     .Call(`_ravetools_mrisRemesh`, vb_, it_, target_edge_len, niterations, n_smooth, damping, verbose)
+}
+
+mrisFillInteriorParity <- function(vb_, it_, dims) {
+    .Call(`_ravetools_mrisFillInteriorParity`, vb_, it_, dims)
+}
+
+mrisCloseBinary <- function(mask, dims, radius, slice_axis) {
+    .Call(`_ravetools_mrisCloseBinary`, mask, dims, radius, slice_axis)
+}
+
+mrisLargestComponent <- function(it_, nv) {
+    .Call(`_ravetools_mrisLargestComponent`, it_, nv)
+}
+
+quickhull3dConvexHull <- function(vb, tolerance) {
+    .Call(`_ravetools_quickhull3dConvexHull`, vb, tolerance)
 }
 
 rawToUInt8 <- function(x) {
@@ -669,8 +689,12 @@ register_linear_cpp <- function(fixed, fixedDim, fixedVox2Ras, moving, movingDim
     .Call(`_ravetools_register_linear_cpp`, fixed, fixedDim, fixedVox2Ras, moving, movingDim, movingVox2Ras, type, metric, shrinkFactors, smoothingSigmas, iterations, samplingRate, learningRate, numberOfBins, seed, initTransform, fixedMask, movingMask, verbose)
 }
 
-register_syn_cpp <- function(fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, verbose = FALSE) {
-    .Call(`_ravetools_register_syn_cpp`, fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, verbose)
+register_syn_cpp <- function(fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, convergenceThreshold, convergenceWindow, verbose = FALSE) {
+    .Call(`_ravetools_register_syn_cpp`, fixedList, fixedDim, fixedVox2Ras, movingList, movingDim, movingVox2Ras, affineTransform, metricNames, weights, shrinkFactors, smoothingSigmas, iterations, gradStep, flowSigma, totalSigma, ccRadius, interpCodes, fixedMask, movingMask, fixedPoints, movingPoints, pointsWeight, convergenceThreshold, convergenceWindow, verbose)
+}
+
+syn_convergence_values_cpp <- function(energy, window) {
+    .Call(`_ravetools_syn_convergence_values_cpp`, energy, window)
 }
 
 resample3D <- function(arrayDim, fromArray, newVoxToWorldTransposed, oldVoxToWorldTransposed, na, interpolation = 0L) {
@@ -759,6 +783,10 @@ vcgMeshPatchFaces <- function(vb_, it_, boundary_seq, seed_face) {
 
 vcgFixDefects <- function(vb_, it_, merge_tolerance = -1.0, max_hole_size = 100L, verbose = FALSE) {
     .Call(`_ravetools_vcgFixDefects`, vb_, it_, merge_tolerance, max_hole_size, verbose)
+}
+
+vcgConvexHull <- function(vb_, tolerance) {
+    .Call(`_ravetools_vcgConvexHull`, vb_, tolerance)
 }
 
 vcgDecimate <- function(vb_, it_, targetFaces, preserveTopology, preserveBoundary, normalCheck, qualityThreshold, verbose) {
